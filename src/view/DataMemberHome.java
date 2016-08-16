@@ -62,6 +62,11 @@ public class DataMemberHome extends javax.swing.JFrame {
         });
 
         jButton4.setText("View Requested File Status");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Create file& Upload");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -181,6 +186,13 @@ public class DataMemberHome extends javax.swing.JFrame {
         DataMemberTransferHistory dataMemberTransferHistory=new DataMemberTransferHistory();
         dataMemberTransferHistory.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        ViewRequestedFileStatus viewRequestedFileStatus=new ViewRequestedFileStatus();
+        viewRequestedFileStatus.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
