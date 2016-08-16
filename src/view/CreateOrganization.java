@@ -6,11 +6,24 @@
 
 package view;
 
+import Db.Dbcon;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Jithinpv
  */
 public class CreateOrganization extends javax.swing.JFrame {
+    String path="";
+    long size;
 
     /**
      * Creates new form CreateOrganization
@@ -61,10 +74,20 @@ public class CreateOrganization extends javax.swing.JFrame {
         jLabel6.setText("Logo");
 
         jButton1.setText("Browse");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton2.setText("CANCEL");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("CREATE");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -180,7 +203,46 @@ public class CreateOrganization extends javax.swing.JFrame {
         String phoneNumber=jTextField3.getText();
         String password=new String(jPasswordField1.getPassword());
         String place=jTextField5.getText();
+         Dbcon dbcon=new Dbcon();
+         int ins=dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('"+name+"','"+email+"','"+phoneNumber+"','"+password+"','"+place+"','"+path+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1)");
+         if(ins>0){
+             JOptionPane.showMessageDialog(rootPane, "inserted");
+         }
+        
+        
+        
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+        "JPG & GIF Images", "jpg", "gif");
+    
+    chooser.setFileFilter(filter); 
+    int returnVal = chooser.showOpenDialog(this);
+    if(returnVal == JFileChooser.APPROVE_OPTION) {
+         path=chooser.getSelectedFile().getPath();
+       System.out.println("You chose to open this file: " +
+            chooser.getSelectedFile().getName());
+        BufferedImage img = null;
+            try {
+                img = ImageIO.read(new File(path));
+                Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
+                ImageIcon imageIcon = new ImageIcon(scaledInstance);
+                jLabel7.setIcon(imageIcon);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            size=(chooser.getSelectedFile().length())/1024;
+            System.out.println("path "+path+" size "+size);
+    }
+   
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
