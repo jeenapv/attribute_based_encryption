@@ -206,7 +206,7 @@ public class CreateOrganization extends javax.swing.JFrame {
          Dbcon dbcon=new Dbcon();
          int ins=dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('"+name+"','"+email+"','"+phoneNumber+"','"+password+"','"+place+"','"+path+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1)");
          if(ins>0){
-             JOptionPane.showMessageDialog(rootPane, "inserted");
+             
          }
         
         
