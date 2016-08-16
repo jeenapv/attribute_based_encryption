@@ -323,14 +323,14 @@ public class ManageOrganization extends javax.swing.JFrame {
                 jTextField5.setText(place);
                 path=rs.getString(7);
                 System.out.println(path);
-                try {  
-                    img = ImageIO.read(new File(path));
-                      Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
-                ImageIcon imageIcon = new ImageIcon(scaledInstance);
-                jLabel7.setIcon(imageIcon);
-                } catch (IOException ex) {
-                   ex.printStackTrace();
-                }
+                //try {  
+                   // img = ImageIO.read(new File(path));
+                    //  Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
+               // ImageIcon imageIcon = new ImageIcon(scaledInstance);
+               // jLabel7.setIcon(imageIcon);
+               // } catch (IOException ex) {
+               //    ex.printStackTrace();
+               // }
                 
             }
         } catch (SQLException ex) {
