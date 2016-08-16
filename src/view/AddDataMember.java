@@ -6,6 +6,8 @@
 
 package view;
 
+import Db.Dbcon;
+
 /**
  *
  * @author Jithinpv
@@ -91,8 +93,18 @@ public class AddDataMember extends javax.swing.JFrame {
         jLabel6.setText("Password");
 
         jButton1.setText("Home");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Add");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -144,8 +156,7 @@ public class AddDataMember extends javax.swing.JFrame {
                                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(98, 98, 98)
-                                .addGap(73, 73, 73))))
+                                .addGap(171, 171, 171))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(46, 46, 46)
@@ -221,7 +232,26 @@ public class AddDataMember extends javax.swing.JFrame {
         String address=jTextArea1.getText();
         String phoneNumber=jTextField5.getText();
         String password=new String(jPasswordField1.getPassword());
+        Dbcon dbcon=new Dbcon();
+        dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status)values('"+name+"','"+email+"','"+dateOfBirth+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1)");
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText("");
+       jTextField2.setText("");
+       jTextField3.setText("");
+        jTextArea1.setText("");
+        jTextField5.setText("");
+        jPasswordField1.setText("");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        DataMemberHome dataMemberHome=new DataMemberHome();
+        dataMemberHome.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

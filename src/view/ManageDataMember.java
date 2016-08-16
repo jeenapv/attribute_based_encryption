@@ -6,6 +6,12 @@
 
 package view;
 
+import Db.Dbcon;
+import java.awt.image.BufferedImage;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Jithinpv
@@ -51,6 +57,11 @@ public class ManageDataMember extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -64,7 +75,7 @@ public class ManageDataMember extends javax.swing.JFrame {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, true, true
+                false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -73,6 +84,11 @@ public class ManageDataMember extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -84,26 +100,62 @@ public class ManageDataMember extends javax.swing.JFrame {
 
         jLabel1.setText("Name");
 
+        jTextField1.setEditable(false);
+
+        jTextField2.setEditable(false);
+
         jLabel2.setText("E-Mail");
+
+        jTextField3.setEditable(false);
 
         jLabel3.setText("Date of Birth");
 
         jLabel4.setText("Address");
 
+        jTextField5.setEditable(false);
+
         jLabel5.setText("Phone Number");
+
+        jTextField6.setEditable(false);
 
         jLabel6.setText("Password");
 
         jButton1.setText("HOME");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("EDIT");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("SAVE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("CANCEL");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("DEACTIVATE");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
@@ -113,9 +165,9 @@ public class ManageDataMember extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addGap(22, 22, 22)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -159,9 +211,10 @@ public class ManageDataMember extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(37, Short.MAX_VALUE)
+                        .addGap(0, 26, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -198,6 +251,100 @@ public class ManageDataMember extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        DataMemberHome dataMemberHome=new DataMemberHome();
+        dataMemberHome.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        Dbcon dbcon=new Dbcon();
+        dbcon.update("update tbl_data_member set org_status=0 where data_member_id='"+id+"'");
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon=new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+        ResultSet rs=dbcon.select("select * from tbl_data_member order by data_member_id asc");
+        try {
+            while(rs.next()){
+                dt.addRow(new String[]{rs.getString(1),rs.getString(2),rs.getString(10)});
+            }
+            jTable1.setModel(dt);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setEditable(true);
+        jTextField2.setEditable(true);
+        jTextField3.setEditable(true);
+        jTextArea1.setEditable(true);
+        jTextField5.setEditable(true);
+        jTextField6.setEditable(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+         String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String name=jTextField1.getText();
+        String email=jTextField2.getText();
+        String dob=jTextField3.getText();
+        String address=jTextArea1.getText();
+        String phone_num=jTextField5.getText();
+        String password=jTextField6.getText();
+        Dbcon dbcon=new Dbcon();
+        dbcon.update("update tbl_data_member set name='"+name+"',email_id='"+email+"',date_of_birth='"+dob+"',address='"+address+"',phone_number='"+phone_num+"',password='"+password+"',updated_at='"+System.currentTimeMillis()+"'where data_member_id='"+id+"'");
+        
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select * from tbl_data_member where data_member_id='"+id+"'");
+        String name, email, phone_num, password, place,address,dob;
+        BufferedImage img = null;
+        try {
+            if (rs.next()) {
+                name = rs.getString(2);
+                jTextField1.setText(name);
+                email = rs.getString(3);
+                jTextField2.setText(email);
+                dob = rs.getString(4);
+                jTextField3.setText(dob);
+                address=rs.getString(5);
+                jTextArea1.setText(address);
+                phone_num = rs.getString(6);
+                jTextField5.setText(phone_num);
+                password = rs.getString(7);
+                jTextField6.setText(password);
+                
+            }
+        }catch(Exception e){
+             e.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextArea1.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
