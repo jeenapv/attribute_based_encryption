@@ -53,8 +53,18 @@ public class AdminHome extends javax.swing.JFrame {
         });
 
         jButton3.setText("View Transfer History");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("View Approval Request");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("HOME");
 
@@ -128,6 +138,21 @@ public class AdminHome extends javax.swing.JFrame {
         ManageOrganization manageOrganization=new ManageOrganization();
         manageOrganization.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        ViewApprovalRequest viewApprovalRequest=new ViewApprovalRequest();
+        viewApprovalRequest.setVisible(true);
+                
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        ViewTransferHistory viewTransferHistory=new ViewTransferHistory();
+        viewTransferHistory.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

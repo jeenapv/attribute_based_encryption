@@ -67,6 +67,11 @@ public class CreateOrganization extends javax.swing.JFrame {
         jButton2.setText("CANCEL");
 
         jButton3.setText("CREATE");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("HOME");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -167,6 +172,15 @@ public class CreateOrganization extends javax.swing.JFrame {
         AdminHome adminHome=new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String name=jTextField1.getText();
+        String email=jTextField2.getText();
+        String phoneNumber=jTextField3.getText();
+        String password=new String(jPasswordField1.getPassword());
+        String place=jTextField5.getText();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
