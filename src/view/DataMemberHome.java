@@ -48,6 +48,11 @@ public class DataMemberHome extends javax.swing.JFrame {
         jButton1.setText("LOGOUT");
 
         jButton2.setText("View Transfer History");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("View All Files");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -59,8 +64,18 @@ public class DataMemberHome extends javax.swing.JFrame {
         jButton4.setText("View Requested File Status");
 
         jButton5.setText("Create file& Upload");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         jButton6.setText("Encryption History");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -145,6 +160,27 @@ public class DataMemberHome extends javax.swing.JFrame {
         ViewAllFiles viewAllFiles=new ViewAllFiles();
         viewAllFiles.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        ChooseFile chooseFile=new ChooseFile();
+        chooseFile.setVisible(true);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        EncryptionHistory encryptionHistory=new EncryptionHistory();
+        encryptionHistory.setVisible(true);
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        DataMemberTransferHistory dataMemberTransferHistory=new DataMemberTransferHistory();
+        dataMemberTransferHistory.setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
