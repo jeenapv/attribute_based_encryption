@@ -6,6 +6,8 @@
 
 package view;
 
+import Db.Dbcon;
+
 /**
  *
  * @author Jithinpv
@@ -58,6 +60,11 @@ public class UploadFile extends javax.swing.JFrame {
         jLabel6.setText("Secret Key");
 
         jButton1.setText("UPLOAD");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("BACK");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -140,6 +147,17 @@ public class UploadFile extends javax.swing.JFrame {
         ChooseFile chooseFile=new ChooseFile();
         chooseFile.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+       String publicKey= jTextField1.getText();
+       String attribute1=jTextField2.getText();
+       String attribute2=jTextField3.getText();
+       String masterKey=jTextField4.getText();
+       String secretKey=jTextField5.getText();
+        Dbcon dbcon = new Dbcon();
+        dbcon.update("update tbl_file_encryption_logs set public_key='"+publicKey+"',attr_1='"+attribute1+"',attr_2='"+attribute2+"',master_key='"+masterKey+"',secret_key='"+secretKey+"',created_at='"+System.currentTimeMillis()+"' where data_member_id='"+Login.logged_in_user_id+"'");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
