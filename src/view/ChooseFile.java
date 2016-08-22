@@ -3,14 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import Db.Dbcon;
+import java.awt.Component;
+import java.io.File;
+import javax.swing.JFileChooser;
 
 /**
  *
  * @author Jithinpv
  */
 public class ChooseFile extends javax.swing.JFrame {
+
+    public static String path;
 
     /**
      * Creates new form ChooseFile
@@ -41,6 +47,11 @@ public class ChooseFile extends javax.swing.JFrame {
         jLabel1.setText("Choose File  :");
 
         jButton1.setText("Browse");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("ENCRYPT");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -106,17 +117,41 @@ public class ChooseFile extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
-        UploadFile uploadFile=new UploadFile();
-        uploadFile.setVisible(true);
+        Dbcon dbcon = new Dbcon();
+        int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id)values('" + path + "','"+Login.logged_in_user_id+"')");
+        if (ins > 0) {
+            this.dispose();
+            UploadFile uploadFile = new UploadFile();
+            uploadFile.setVisible(true);
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DataMemberHome dataMemberHome=new DataMemberHome();
+        DataMemberHome dataMemberHome = new DataMemberHome();
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showOpenDialog((Component) evt.getSource());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            try {
+                path = file.toString();
+                System.out.println(path);
+                String name = chooser.getSelectedFile().getName();
+                jLabel2.setText(name);
+            } catch (Exception ex) {
+                System.out.println("problem accessing file" + file.getAbsolutePath());
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
