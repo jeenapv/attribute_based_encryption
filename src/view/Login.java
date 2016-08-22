@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Jithinpv
  */
 public class Login extends javax.swing.JFrame {
-
+ public static int logged_in_user_id=0;
     /**
      * Creates new form AdminLogin
      */
@@ -100,6 +100,7 @@ public class Login extends javax.swing.JFrame {
         ResultSet rs = dbcon.select("select * from tbl_admin where admin_name='" + userName + "' and password='" + password + "'");
         try {
             if (rs.next()) {
+                
                 this.dispose();
                 AdminHome adminHome = new AdminHome();
                 adminHome.setVisible(true);
@@ -110,6 +111,8 @@ public class Login extends javax.swing.JFrame {
         ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
         try {
             if (r.next()) {
+                String id=r.getString(1);
+                logged_in_user_id=Integer.parseInt(id);
                 this.dispose();
                 DataMemberHome dataMemberHome = new DataMemberHome();
                 dataMemberHome.setVisible(true);
@@ -120,6 +123,8 @@ public class Login extends javax.swing.JFrame {
         ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
         try {
             if (rst.next()) {
+                String id=r.getString(1);
+                logged_in_user_id=Integer.parseInt(id);
                 this.dispose();
                 OrganizationHome organizationHome = new OrganizationHome();
                 organizationHome.setVisible(true);
