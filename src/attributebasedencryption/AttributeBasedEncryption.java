@@ -6,7 +6,7 @@
 
 package attributebasedencryption;
 
-import view.Login;
+import view.MainLogin;
 
 /**
  *
@@ -19,8 +19,8 @@ public class AttributeBasedEncryption {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Login adminLogin=new Login();
-        adminLogin.setVisible(true);
+        MainLogin mainLogin=new MainLogin();
+        mainLogin.setVisible(true);
     }
     
 }

@@ -10,17 +10,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Jithinpv
  */
-public class Login extends javax.swing.JFrame {
+public class AdminLogin extends javax.swing.JFrame {
  public static int logged_in_user_id=0;
     /**
      * Creates new form AdminLogin
      */
-    public Login() {
+    public AdminLogin() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
@@ -104,34 +105,14 @@ public class Login extends javax.swing.JFrame {
                 this.dispose();
                 AdminHome adminHome = new AdminHome();
                 adminHome.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "invalid");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
-        try {
-            if (r.next()) {
-                String id=r.getString(1);
-                logged_in_user_id=Integer.parseInt(id);
-                this.dispose();
-                DataMemberHome dataMemberHome = new DataMemberHome();
-                dataMemberHome.setVisible(true);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
-        try {
-            if (rst.next()) {
-                String id=rst.getString(1);
-                logged_in_user_id=Integer.parseInt(id);
-                this.dispose();
-                OrganizationHome organizationHome = new OrganizationHome();
-                organizationHome.setVisible(true);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+      
+        
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -153,20 +134,20 @@ public class Login extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdminLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new AdminLogin().setVisible(true);
             }
         });
     }

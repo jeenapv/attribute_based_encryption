@@ -140,11 +140,11 @@ public class AddDataMember extends javax.swing.JFrame {
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jButton1)
-                            .addGap(46, 46, 46)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton2)
-                            .addGap(37, 37, 37)
-                            .addComponent(jButton3)
-                            .addGap(22, 22, 22)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(44, 44, 44)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -249,8 +249,8 @@ public class AddDataMember extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DataMemberHome dataMemberHome=new DataMemberHome();
-        dataMemberHome.setVisible(true);
+        OrganizationHome organizationHome=new OrganizationHome();
+        organizationHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
