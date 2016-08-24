@@ -118,7 +118,7 @@ public class ChooseFile extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
-        int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id)values('" + path + "','"+AdminLogin.logged_in_user_id+"')");
+        int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id)values('" + path + "','"+DataMemberLogin.logged_in_user_id+"')");
         if (ins > 0) {
             this.dispose();
             UploadFile uploadFile = new UploadFile();
