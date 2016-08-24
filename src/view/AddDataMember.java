@@ -233,7 +233,7 @@ public class AddDataMember extends javax.swing.JFrame {
         String phoneNumber=jTextField5.getText();
         String password=new String(jPasswordField1.getPassword());
         Dbcon dbcon=new Dbcon();
-        dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status)values('"+name+"','"+email+"','"+dateOfBirth+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1)");
+        dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status,organization_id)values('"+name+"','"+email+"','"+dateOfBirth+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1,'"+OrganizationLogin.logged_in_user_id+"')");
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

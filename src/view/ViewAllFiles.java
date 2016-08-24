@@ -3,8 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import Db.Dbcon;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -45,6 +50,11 @@ public class ViewAllFiles extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -69,6 +79,11 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setResizable(false);
@@ -89,6 +104,11 @@ public class ViewAllFiles extends javax.swing.JFrame {
         jLabel5.setText("Priority");
 
         jButton1.setText("REQUEST");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("CANCEL");
 
@@ -178,9 +198,51 @@ public class ViewAllFiles extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DataMemberHome dataMemberHome=new DataMemberHome();
+        DataMemberHome dataMemberHome = new DataMemberHome();
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs");
+
+        try {
+            while (rs.next()) {
+                String date1 = rs.getString(11);
+                long date2 = Long.parseLong(date1);
+                Date date3 = new Date(date2);
+                String date = date3.toString();
+                dt.addRow(new String[]{rs.getString(1), rs.getString(10), rs.getString(12), rs.getString(2), date});
+            }
+            jTable1.setModel(dt);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        Dbcon dbcon = new Dbcon();
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String priority=jTextField4.getText();
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String dataMember = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
+        String organization = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        String file = jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString();
+        String date = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
+        Dbcon dbcon = new Dbcon();
+        dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('"+DataMemberLogin.logged_in_user_id+"','"+dataMember+"','"+id+"','"+System.currentTimeMillis()+"','"+priority+"')");
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
