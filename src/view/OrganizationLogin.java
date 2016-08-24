@@ -3,13 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import static view.AdminLogin.logged_in_user_id;
 
 /**
  *
@@ -17,12 +15,14 @@ import static view.AdminLogin.logged_in_user_id;
  */
 public class OrganizationLogin extends javax.swing.JFrame {
 
+    public static int logged_in_user_id = 0;
+
     /**
      * Creates new form OrganizationLogin
      */
     public OrganizationLogin() {
         initComponents();
-         this.setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -96,19 +96,18 @@ public class OrganizationLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String userName=jTextField1.getText();
-        String password=new String(jPasswordField1.getPassword());
-        Dbcon dbcon=new Dbcon();
+        String userName = jTextField1.getText();
+        String password = new String(jPasswordField1.getPassword());
+        Dbcon dbcon = new Dbcon();
         ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
         try {
             if (rst.next()) {
-                String id=rst.getString(1);
-                logged_in_user_id=Integer.parseInt(id);
+                String id = rst.getString(1);
+                logged_in_user_id = Integer.parseInt(id);
                 this.dispose();
                 OrganizationHome organizationHome = new OrganizationHome();
                 organizationHome.setVisible(true);
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(rootPane, "invalid");
             }
         } catch (Exception ex) {

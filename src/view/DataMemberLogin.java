@@ -9,20 +9,20 @@ package view;
 import Db.Dbcon;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import static view.AdminLogin.logged_in_user_id;
 
 /**
  *
  * @author Jithinpv
  */
 public class DataMemberLogin extends javax.swing.JFrame {
-
+ public static int logged_in_user_id=0;
     /**
      * Creates new form DataMemberLogin
      */
     public DataMemberLogin() {
         initComponents();
          this.setLocationRelativeTo(null);
+        
     }
 
     /**

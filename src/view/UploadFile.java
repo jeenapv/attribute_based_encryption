@@ -156,7 +156,7 @@ public class UploadFile extends javax.swing.JFrame {
        String masterKey=jTextField4.getText();
        String secretKey=jTextField5.getText();
         Dbcon dbcon = new Dbcon();
-        dbcon.update("update tbl_file_encryption_logs set public_key='"+publicKey+"',attr_1='"+attribute1+"',attr_2='"+attribute2+"',master_key='"+masterKey+"',secret_key='"+secretKey+"',created_at='"+System.currentTimeMillis()+"' where data_member_id='"+Login.logged_in_user_id+"'");
+        dbcon.update("update tbl_file_encryption_logs set public_key='"+publicKey+"',attr_1='"+attribute1+"',attr_2='"+attribute2+"',master_key='"+masterKey+"',secret_key='"+secretKey+"',created_at='"+System.currentTimeMillis()+"' where data_member_id='"+DataMemberLogin.logged_in_user_id+"'");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
