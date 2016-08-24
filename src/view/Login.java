@@ -123,7 +123,7 @@ public class Login extends javax.swing.JFrame {
         ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
         try {
             if (rst.next()) {
-                String id=r.getString(1);
+                String id=rst.getString(1);
                 logged_in_user_id=Integer.parseInt(id);
                 this.dispose();
                 OrganizationHome organizationHome = new OrganizationHome();

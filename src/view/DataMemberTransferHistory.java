@@ -17,6 +17,7 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
      */
     public DataMemberTransferHistory() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

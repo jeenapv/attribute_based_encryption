@@ -46,6 +46,11 @@ public class DataMemberHome extends javax.swing.JFrame {
         jLabel1.setText("HOME");
 
         jButton1.setText("LOGOUT");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("View Transfer History");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -193,6 +198,13 @@ public class DataMemberHome extends javax.swing.JFrame {
         ViewRequestedFileStatus viewRequestedFileStatus=new ViewRequestedFileStatus();
         viewRequestedFileStatus.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+        Login login=new Login();
+        login.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
