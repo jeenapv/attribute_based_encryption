@@ -146,10 +146,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(133, 133, 133)
-                                .addComponent(jLabel1)))
+                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -160,6 +157,10 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addComponent(jButton3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(245, 245, 245))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +215,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 long date2 = Long.parseLong(date1);
                 Date date3 = new Date(date2);
                 String date = date3.toString();
-                dt.addRow(new String[]{rs.getString(1), rs.getString(10), rs.getString(12), rs.getString(2), date});
+                dt.addRow(new String[]{rs.getString(1), rs.getString(10), rs.getString(3), rs.getString(2), date});
             }
             jTable1.setModel(dt);
         } catch (SQLException ex) {
