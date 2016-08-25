@@ -3,8 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import Db.Dbcon;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -41,6 +48,11 @@ public class EncryptionHistory extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("Encryption History");
 
@@ -65,6 +77,11 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTable1);
@@ -92,7 +109,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
                 .addGap(201, 201, 201))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,10 +163,50 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        DataMemberHome dataMemberHome=new DataMemberHome();
+        this.dispose();
+        DataMemberHome dataMemberHome = new DataMemberHome();
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where data_member_id='"+DataMemberLogin.logged_in_user_id+"'");
+        try {
+            while (rs.next()) {
+                String date1 = rs.getString(11);
+                long date2 = Long.parseLong(date1);
+                String date3 = new Date(date2).toString();
+
+                dt.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5), date3});
+            }
+            jTable1.setModel(dt);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        //System.out.println(id);
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
+        try {
+            if(rs.next()){
+                String pubicKey=rs.getString(3);
+                jTextField1.setText(pubicKey);
+                String masterKey=rs.getString(8);
+                jTextField2.setText(masterKey);
+                String secretKey=rs.getString(9);
+                jTextField3.setText(secretKey);
+            }
+        } catch (SQLException ex) {
+           
+        }
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
