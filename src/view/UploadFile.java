@@ -7,13 +7,17 @@
 package view;
 
 import Db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Jithinpv
  */
 public class UploadFile extends javax.swing.JFrame {
-
+public static int encryption_id=0;
     /**
      * Creates new form UploadFile
      */
@@ -156,7 +160,16 @@ public class UploadFile extends javax.swing.JFrame {
        String masterKey=jTextField4.getText();
        String secretKey=jTextField5.getText();
         Dbcon dbcon = new Dbcon();
-        dbcon.update("update tbl_file_encryption_logs set public_key='"+publicKey+"',attr_1='"+attribute1+"',attr_2='"+attribute2+"',master_key='"+masterKey+"',secret_key='"+secretKey+"',created_at='"+System.currentTimeMillis()+"' where data_member_id='"+DataMemberLogin.logged_in_user_id+"'");
+        ResultSet rs=dbcon.select("select max(encryption_id) from tbl_file_encryption_logs");
+        try {
+            if(rs.next()){
+               UploadFile.encryption_id=Integer.parseInt(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+        
+        dbcon.update("update tbl_file_encryption_logs set public_key='"+publicKey+"',attr_1='"+attribute1+"',attr_2='"+attribute2+"',master_key='"+masterKey+"',secret_key='"+secretKey+"',created_at='"+System.currentTimeMillis()+"' where encryption_id='"+UploadFile.encryption_id+"'");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
