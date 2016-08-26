@@ -150,9 +150,9 @@ public class ViewAllFiles extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(97, 97, 97)
+                .addGap(108, 108, 108)
                 .addComponent(jButton1)
-                .addGap(29, 29, 29)
+                .addGap(18, 18, 18)
                 .addComponent(jButton2)
                 .addGap(28, 28, 28)
                 .addComponent(jButton3)
@@ -207,15 +207,15 @@ public class ViewAllFiles extends javax.swing.JFrame {
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs");
+        ResultSet rs = dbcon.select("SELECT hp.name , s.encryption_id, s.encrypted_file_path, s.created_at,h.name FROM tbl_file_encryption_logs s INNER JOIN tbl_data_member hp   on s.data_member_id = hp.data_member_id INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id ");
 
         try {
             while (rs.next()) {
-                String date1 = rs.getString(11);
+                String date1 = rs.getString(4);
                 long date2 = Long.parseLong(date1);
                 Date date3 = new Date(date2);
                 String date = date3.toString();
-                dt.addRow(new String[]{rs.getString(1), rs.getString(10), rs.getString(3), rs.getString(2), date});
+                dt.addRow(new String[]{rs.getString(2), rs.getString(1), rs.getString(5), rs.getString(3), date});
             }
             jTable1.setModel(dt);
         } catch (SQLException ex) {
