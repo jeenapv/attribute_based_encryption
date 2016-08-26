@@ -9,6 +9,9 @@ import Db.Dbcon;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -229,20 +232,47 @@ public class ViewAllFiles extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
+        ResultSet rs=dbcon.select("select * from tbl_file_encryption_logs where encryption_id='"+id+"'");
+        try {
+            if(rs.next()){
+                String filename=rs.getString(2);
+                jTextField1.setText(filename);
+                String filesize=rs.getString(4);
+                jTextField2.setText(filesize);
+                String filetype=rs.getString(5);
+                jTextField3.setText(filetype);
+                
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String priority=jTextField4.getText();
+        if(priority.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter priority");
+        }else{
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         String dataMember = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
         String organization = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
         String file = jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString();
         String date = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
         Dbcon dbcon = new Dbcon();
-        dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('"+DataMemberLogin.logged_in_user_id+"','"+dataMember+"','"+id+"','"+System.currentTimeMillis()+"','"+priority+"')");
-
+        ResultSet rs=dbcon.select("select data_member_id from tbl_file_encryption_logs where encryption_id='"+id+"'");
+      
+            try {
+                if(rs.next()){
+                   String member_id=rs.getString(1);
+                    dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('"+DataMemberLogin.logged_in_user_id+"','"+member_id+"','"+id+"','"+System.currentTimeMillis()+"','"+priority+"')");
+                }  
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
