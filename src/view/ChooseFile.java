@@ -9,6 +9,7 @@ import Db.Dbcon;
 import java.awt.Component;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -60,8 +61,6 @@ public class ChooseFile extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("            File Name");
-
         jLabel3.setText("File Encryption");
 
         jButton3.setText("BACK");
@@ -104,8 +103,8 @@ public class ChooseFile extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jButton1))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(34, 34, 34)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
@@ -117,12 +116,18 @@ public class ChooseFile extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        String filename=jLabel2.getText();
+        if(filename.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Choose file");
+        }else{
+        
         Dbcon dbcon = new Dbcon();
         int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id)values('" + path + "','"+DataMemberLogin.logged_in_user_id+"')");
         if (ins > 0) {
             this.dispose();
             UploadFile uploadFile = new UploadFile();
             uploadFile.setVisible(true);
+        }
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed

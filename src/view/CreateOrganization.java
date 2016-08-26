@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
@@ -12,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -22,7 +22,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author Jithinpv
  */
 public class CreateOrganization extends javax.swing.JFrame {
-    String path="";
+
+    String path = "";
     long size;
 
     /**
@@ -192,40 +193,61 @@ public class CreateOrganization extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        String name=jTextField1.getText();
-        String email=jTextField2.getText();
-        String phoneNumber=jTextField3.getText();
-        String password=new String(jPasswordField1.getPassword());
-        String place=jTextField5.getText();
-         Dbcon dbcon=new Dbcon();
-         int ins=dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('"+name+"','"+email+"','"+phoneNumber+"','"+password+"','"+place+"','"+path+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1)");
-         if(ins>0){
-             
-         }
-        
-        
-        
+        String onlychars = "^\\p{Alpha}+$";
+        String onlynum = "[0-9]+";
+        String phonereg = "((\\+*)((0[ -]+)*|(91 )*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6}";
+        String name = jTextField1.getText();
+        String email = jTextField2.getText();
+        String phoneNumber = jTextField3.getText();
+        String password = new String(jPasswordField1.getPassword());
+        String place = jTextField5.getText();
+       // Icon logo=jLabel7.getIcon();
+        if (name.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your name");
+        } else if (email.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your email id");
+        } else if (phoneNumber.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your phone Number");
+        } else if (!phoneNumber.matches(phonereg)) {
+
+            JOptionPane.showMessageDialog(rootPane, "Enter the phone number in correct format");
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your password");
+        } else if (place.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your place");
+        } else if(jLabel7.getIcon()==null){
+            JOptionPane.showMessageDialog(rootPane, "Choose logo");
+        }
+        else {
+            Dbcon dbcon = new Dbcon();
+            int ins = dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('" + name + "','" + email + "','" + phoneNumber + "','" + password + "','" + place + "','" + path + "','" + System.currentTimeMillis() + "','" + System.currentTimeMillis() + "',1)");
+            if (ins > 0) {
+                JOptionPane.showMessageDialog(rootPane, "Created successfully");
+            }
+
+        }
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "JPG & GIF Images", "jpg", "gif");
-    
-    chooser.setFileFilter(filter); 
-    int returnVal = chooser.showOpenDialog(this);
-    if(returnVal == JFileChooser.APPROVE_OPTION) {
-         path=chooser.getSelectedFile().getPath();
-       System.out.println("You chose to open this file: " +
-            chooser.getSelectedFile().getName());
-        BufferedImage img = null;
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            path = chooser.getSelectedFile().getPath();
+            System.out.println("You chose to open this file: "
+                    + chooser.getSelectedFile().getName());
+            BufferedImage img = null;
             try {
                 img = ImageIO.read(new File(path));
                 Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
@@ -234,10 +256,10 @@ public class CreateOrganization extends javax.swing.JFrame {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            size=(chooser.getSelectedFile().length())/1024;
-            System.out.println("path "+path+" size "+size);
-    }
-   
+            size = (chooser.getSelectedFile().length()) / 1024;
+            System.out.println("path " + path + " size " + size);
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

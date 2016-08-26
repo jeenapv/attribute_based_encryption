@@ -7,6 +7,7 @@
 package view;
 
 import Db.Dbcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -226,14 +227,45 @@ public class AddDataMember extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        String onlychars = "^\\p{Alpha}+$";
+        String onlynum = "[0-9]+";
+        String phonereg = "((\\+*)((0[ -]+)*|(91 )*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6}";
         String name=jTextField1.getText();
         String email=jTextField2.getText();
         String dateOfBirth=jTextField3.getText();
         String address=jTextArea1.getText();
         String phoneNumber=jTextField5.getText();
         String password=new String(jPasswordField1.getPassword());
-        Dbcon dbcon=new Dbcon();
-        dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status,organization_id)values('"+name+"','"+email+"','"+dateOfBirth+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1,'"+OrganizationLogin.logged_in_user_id+"')");
+        if(name.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your name");
+        }else if (!name.matches(onlychars)) {
+
+            JOptionPane.showMessageDialog(rootPane, "only character values are allowed for names");
+        }
+
+        else if(email.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your email id");
+        }else if(dateOfBirth.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your date Of Birth");
+        }else if(address.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your address");
+        }else if(phoneNumber.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your phone Number");
+        }
+        else if (!phoneNumber.matches(phonereg)) {
+
+            JOptionPane.showMessageDialog(rootPane, "Enter the phone number in correct format");
+        }
+            else if(password.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter your password");
+        }else{
+            Dbcon dbcon=new Dbcon();
+        int ins=dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status,organization_id)values('"+name+"','"+email+"','"+dateOfBirth+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1,'"+OrganizationLogin.logged_in_user_id+"')");
+        if(ins>0){
+            JOptionPane.showMessageDialog(rootPane, "Added successfully");
+        }
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

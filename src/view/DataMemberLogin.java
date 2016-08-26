@@ -108,6 +108,11 @@ public class DataMemberLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName=jTextField1.getText();
         String password=new String(jPasswordField1.getPassword());
+        if(userName.equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Enter username");
+        }else if(password.equals("")){
+             JOptionPane.showMessageDialog(rootPane, "Enter password");
+        }else{
         Dbcon dbcon=new Dbcon();
           ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
         try {
@@ -123,6 +128,7 @@ public class DataMemberLogin extends javax.swing.JFrame {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
