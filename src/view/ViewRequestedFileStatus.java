@@ -6,6 +6,14 @@
 
 package view;
 
+import Db.Dbcon;
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Jithinpv
@@ -35,6 +43,11 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -108,6 +121,35 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
         DataMemberHome dataMemberHome=new DataMemberHome();
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+       ResultSet rs= dbcon.select("SELECT hp.name , s.request_id,s.requested_date,s.status, th.encrypted_file_path,h.name FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.file_owner_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member='"+DataMemberLogin.logged_in_user_id+"' and  th.encryption_id=s.encryption_id");
+        try {
+            while(rs.next()){
+                String date1 = rs.getString(3);
+                long date2 = Long.parseLong(date1);
+                Date date3 = new Date(date2);
+                String date = date3.toString();
+                String status_string=rs.getString(4);
+                int status_int=Integer.parseInt(status_string);
+                String status;
+                if(status_int==2){
+                    status="pending";
+                }else if(status_int==1){
+                    status="approved";
+                }else{
+                    status="rejected";
+                }
+                dt.addRow(new String[]{rs.getString(2), rs.getString(5), rs.getString(1), rs.getString(6),date,status});
+            }
+             jTable1.setModel(dt);
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     /**
      * @param args the command line arguments
