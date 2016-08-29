@@ -6,6 +6,10 @@
 
 package view;
 
+import Db.Dbcon;
+import java.sql.ResultSet;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Jithinpv
@@ -42,6 +46,11 @@ public class DataMemberHome extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jLabel1.setText("HOME");
 
@@ -98,8 +107,18 @@ public class DataMemberHome extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton7.setText("APPROVE");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton8.setText("REJECT");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,6 +224,27 @@ public class DataMemberHome extends javax.swing.JFrame {
         MainLogin mainlogin=new MainLogin();
         mainlogin.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+         Dbcon dbcon = new Dbcon();
+        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        dbcon.update("update tbl_file_request set approve_reject_date='"+System.currentTimeMillis()+"' where request_id='"+id+"'");
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+        ResultSet rs=dbcon.select("SELECT hp.name ,s.request_priority, s.request_id,s.requested_date,s.status, th.encrypted_file_path,h.name FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.requested_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member=2 and th.encryption_id=s.encryption_id ");
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        dbcon.update("update tbl_file_request set approve_reject_date='"+System.currentTimeMillis()+"' where request_id='"+id+"'");
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
