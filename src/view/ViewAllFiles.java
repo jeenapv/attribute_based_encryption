@@ -6,11 +6,11 @@
 package view;
 
 import Db.Dbcon;
-import java.sql.Date;
+
 import java.sql.ResultSet;
+import java.util.Date;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -206,6 +206,22 @@ public class ViewAllFiles extends javax.swing.JFrame {
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+     private String getFormatedDate(String dateString, String format) {
+        
+         try {
+             long dateMilli = Long.parseLong(dateString);
+        Date date = new Date(dateMilli);
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+        String formatted = formatter.format(date);
+
+        System.out.println("formatted " + formatted);
+        return formatted;
+         } catch (Exception e) {
+             return "date not found";
+         }
+        
+    }
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
@@ -214,15 +230,13 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
         try {
             while (rs.next()) {
-                String date1 = rs.getString(4);
-                long date2 = Long.parseLong(date1);
-                Date date3 = new Date(date2);
-                String date = date3.toString();
-                dt.addRow(new String[]{rs.getString(2), rs.getString(1), rs.getString(5), rs.getString(3), date});
+               
+                // String date = date3.toString();
+                dt.addRow(new String[]{rs.getString(2), rs.getString(1), rs.getString(5), rs.getString(3), getFormatedDate(rs.getString(4),"dd MM YYYY")});
             }
             jTable1.setModel(dt);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+           
         }
 
 
@@ -232,16 +246,16 @@ public class ViewAllFiles extends javax.swing.JFrame {
         // TODO add your handling code here:
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
-        ResultSet rs=dbcon.select("select * from tbl_file_encryption_logs where encryption_id='"+id+"'");
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
         try {
-            if(rs.next()){
-                String filename=rs.getString(2);
+            if (rs.next()) {
+                String filename = rs.getString(2);
                 jTextField1.setText(filename);
-                String filesize=rs.getString(4);
+                String filesize = rs.getString(4);
                 jTextField2.setText(filesize);
-                String filetype=rs.getString(5);
+                String filetype = rs.getString(5);
                 jTextField3.setText(filetype);
-                
+
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -251,27 +265,27 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String priority=jTextField4.getText();
-        if(priority.equals("")){
+        String priority = jTextField4.getText();
+        if (priority.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter priority");
-        }else{
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        String dataMember = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
-        String organization = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
-        String file = jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString();
-        String date = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
-        Dbcon dbcon = new Dbcon();
-        ResultSet rs=dbcon.select("select data_member_id from tbl_file_encryption_logs where encryption_id='"+id+"'");
-      
+        } else {
+            String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+            String dataMember = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
+            String organization = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+            String file = jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString();
+            String date = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
+            Dbcon dbcon = new Dbcon();
+            ResultSet rs = dbcon.select("select data_member_id from tbl_file_encryption_logs where encryption_id='" + id + "'");
+
             try {
-                if(rs.next()){
-                   String member_id=rs.getString(1);
-                    dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('"+DataMemberLogin.logged_in_user_id+"','"+member_id+"','"+id+"','"+System.currentTimeMillis()+"','"+priority+"')");
-                }  
+                if (rs.next()) {
+                    String member_id = rs.getString(1);
+                    dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('" + DataMemberLogin.logged_in_user_id + "','" + member_id + "','" + id + "','" + System.currentTimeMillis() + "','" + priority + "')");
+                }
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-        
+
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
