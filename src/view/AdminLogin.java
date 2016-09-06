@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author Jithinpv
  */
 public class AdminLogin extends javax.swing.JFrame {
- public static int logged_in_user_id=0;
+
     /**
      * Creates new form AdminLogin
      */
@@ -105,28 +105,28 @@ public class AdminLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
-        if(userName.equals("")){
+        if (userName.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter username");
-        }else if(password.equals("")){
-              JOptionPane.showMessageDialog(rootPane, "Enter password");
-        }else{
-        Dbcon dbcon = new Dbcon();
-        ResultSet rs = dbcon.select("select * from tbl_admin where admin_name='" + userName + "' and password='" + password + "'");
-        try {
-            if (rs.next()) {
-                
-                this.dispose();
-                AdminHome adminHome = new AdminHome();
-                adminHome.setVisible(true);
-            }else{
-                JOptionPane.showMessageDialog(rootPane, "invalid");
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter password");
+        } else {
+            Dbcon dbcon = new Dbcon();
+            ResultSet rs = dbcon.select("select * from tbl_admin where admin_name='" + userName + "' and password='" + password + "'");
+            try {
+                if (rs.next()) {
+
+                    this.dispose();
+                    AdminHome adminHome = new AdminHome();
+                    adminHome.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "invalid");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-        }
-      
-        
+
+
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -134,7 +134,7 @@ public class AdminLogin extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        MainLogin mainLogin=new MainLogin();
+        MainLogin mainLogin = new MainLogin();
         mainLogin.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -167,12 +167,12 @@ public class AdminLogin extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new AdminLogin().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

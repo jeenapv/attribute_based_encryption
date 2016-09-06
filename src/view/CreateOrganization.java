@@ -6,6 +6,7 @@
 package view;
 
 import Db.Dbcon;
+import General.Configuration;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -25,6 +28,7 @@ public class CreateOrganization extends javax.swing.JFrame {
 
     String path = "";
     long size;
+    String organisationIconName;
 
     /**
      * Creates new form CreateOrganization
@@ -207,7 +211,7 @@ public class CreateOrganization extends javax.swing.JFrame {
         String phoneNumber = jTextField3.getText();
         String password = new String(jPasswordField1.getPassword());
         String place = jTextField5.getText();
-       // Icon logo=jLabel7.getIcon();
+        // Icon logo=jLabel7.getIcon();
         if (name.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter your name");
         } else if (email.equals("")) {
@@ -221,12 +225,11 @@ public class CreateOrganization extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Enter your password");
         } else if (place.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter your place");
-        } else if(jLabel7.getIcon()==null){
+        } else if (jLabel7.getIcon() == null) {
             JOptionPane.showMessageDialog(rootPane, "Choose logo");
-        }
-        else {
+        } else {
             Dbcon dbcon = new Dbcon();
-            int ins = dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('" + name + "','" + email + "','" + phoneNumber + "','" + password + "','" + place + "','" + path + "','" + System.currentTimeMillis() + "','" + System.currentTimeMillis() + "',1)");
+            int ins = dbcon.insert("insert into tbl_organisation(name,email_id,phone_num,password,place,logo_image,created_at,updated_at,org_status)values('" + name + "','" + email + "','" + phoneNumber + "','" + password + "','" + place + "','" + organisationIconName + "','" + System.currentTimeMillis() + "','" + System.currentTimeMillis() + "',1)");
             if (ins > 0) {
                 JOptionPane.showMessageDialog(rootPane, "Created successfully");
             }
@@ -253,6 +256,10 @@ public class CreateOrganization extends javax.swing.JFrame {
                 Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon imageIcon = new ImageIcon(scaledInstance);
                 jLabel7.setIcon(imageIcon);
+
+                organisationIconName = System.currentTimeMillis() + "." + FilenameUtils.getExtension(path);
+                FileUtils.copyFile(chooser.getSelectedFile(), new File(Configuration.organisationImages + organisationIconName));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -295,12 +302,12 @@ public class CreateOrganization extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new CreateOrganization().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

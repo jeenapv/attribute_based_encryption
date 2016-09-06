@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
+import General.Configuration;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,8 +18,11 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -27,12 +30,40 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ManageOrganization extends javax.swing.JFrame {
 
+    String organisationIconName;
+    int selectedOrganisationStatus = 0;
+
     /**
      * Creates new form ManageOrganization
      */
     public ManageOrganization() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadValuesInTable();
+        active_deactive_button.setEnabled(false);
+    }
+    
+    private void disableAll() {
+        user_name_text.setEditable(false);
+        email_text.setEditable(false);
+        phone_text.setEditable(false);
+        password_text.setEditable(false);
+        phone_text.setEditable(false);
+    }
+
+    private void loadValuesInTable() {
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+        ResultSet rs = dbcon.select("select * from tbl_organisation order by organisation_id asc");
+        try {
+            while (rs.next()) {
+                dt.addRow(new String[]{rs.getString(1), rs.getString(2), (rs.getString(10).trim().equals("1")) ? "active" : "blocked"});
+            }
+            jTable1.setModel(dt);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        disableAll();
     }
 
     /**
@@ -47,23 +78,23 @@ public class ManageOrganization extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        user_name_text = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        email_text = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        phone_text = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        password_text = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        place_text = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        active_deactive_button = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
+        organisation_logo_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -101,31 +132,29 @@ public class ManageOrganization extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-        }
+        jTable1.getColumnModel().getColumn(0).setResizable(false);
+        jTable1.getColumnModel().getColumn(1).setResizable(false);
+        jTable1.getColumnModel().getColumn(2).setResizable(false);
 
         jLabel1.setText("Name");
 
-        jTextField1.setEditable(false);
+        user_name_text.setEditable(false);
 
         jLabel2.setText("E-Mail");
 
-        jTextField2.setEditable(false);
+        email_text.setEditable(false);
 
         jLabel3.setText("Phone Number");
 
-        jTextField3.setEditable(false);
+        phone_text.setEditable(false);
 
         jLabel4.setText("Password");
 
-        jTextField4.setEditable(false);
+        password_text.setEditable(false);
 
         jLabel5.setText("Place");
 
-        jTextField5.setEditable(false);
+        place_text.setEditable(false);
 
         jLabel6.setText("Logo");
 
@@ -143,17 +172,17 @@ public class ManageOrganization extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("CANCEL");
+        jButton3.setText("CLEAR");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton4.setText("DEACTIVATE");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        active_deactive_button.setText("DEACTIVATE");
+        active_deactive_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                active_deactive_buttonActionPerformed(evt);
             }
         });
 
@@ -171,7 +200,7 @@ public class ManageOrganization extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        organisation_logo_label.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -186,19 +215,19 @@ public class ManageOrganization extends javax.swing.JFrame {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(33, 33, 33)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(user_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(33, 33, 33)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(email_text, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(phone_text, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(33, 33, 33)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(password_text, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -206,26 +235,26 @@ public class ManageOrganization extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(33, 33, 33)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(place_text, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(6, 6, 6))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(organisation_logo_label, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jButton6)))
                 .addContainerGap(31, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(121, Short.MAX_VALUE)
                 .addComponent(jButton5)
                 .addGap(107, 107, 107)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4)
+                .addComponent(active_deactive_button)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
-                .addGap(66, 66, 66))
+                .addGap(72, 72, 72))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,32 +264,32 @@ public class ManageOrganization extends javax.swing.JFrame {
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(user_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(email_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(phone_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(password_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(place_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jButton6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                .addComponent(organisation_logo_label, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
                                 .addGap(30, 30, 30))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -268,7 +297,7 @@ public class ManageOrganization extends javax.swing.JFrame {
                         .addGap(30, 30, 30)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton4)
+                    .addComponent(active_deactive_button)
                     .addComponent(jButton5)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
@@ -280,142 +309,145 @@ public class ManageOrganization extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
-        
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon=new Dbcon();
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs=dbcon.select("select * from tbl_organisation order by organisation_id asc");
-        try {
-            while(rs.next()){
-                dt.addRow(new String[]{rs.getString(1),rs.getString(2),rs.getString(10)});
-            }
-            jTable1.setModel(dt);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
     }//GEN-LAST:event_formWindowOpened
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        disableAll();
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
-        ResultSet rs = dbcon.select("select * from tbl_organisation where organisation_id='"+id+"'");
-        String name, email, phone_num, password, place,path;
+        ResultSet rs = dbcon.select("select * from tbl_organisation where organisation_id='" + id + "'");
+        String name, email, phone_num, password, place, path;
         BufferedImage img = null;
         try {
             if (rs.next()) {
                 name = rs.getString(2);
-                jTextField1.setText(name);
+                user_name_text.setText(name);
                 email = rs.getString(3);
-                jTextField2.setText(email);
+                email_text.setText(email);
                 phone_num = rs.getString(4);
-                jTextField3.setText(phone_num);
+                phone_text.setText(phone_num);
                 password = rs.getString(5);
-                jTextField4.setText(password);
+                password_text.setText(password);
                 place = rs.getString(6);
-                jTextField5.setText(place);
-                path=rs.getString(7);
+                place_text.setText(place);
+                path = rs.getString(7);
                 System.out.println(path);
-                //try {  
-                   // img = ImageIO.read(new File(path));
-                    //  Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
-               // ImageIcon imageIcon = new ImageIcon(scaledInstance);
-               // jLabel7.setIcon(imageIcon);
-               // } catch (IOException ex) {
-               //    ex.printStackTrace();
-               // }
-                
+                organisationIconName = rs.getString("logo_image");
+                Configuration.setOrganisationIcon(organisationIconName, organisation_logo_label);
+                active_deactive_button.setEnabled(true);
+
+                selectedOrganisationStatus = Integer.parseInt(rs.getString("org_status"));
+                if (selectedOrganisationStatus == 0) {
+                    active_deactive_button.setText("ACTIVATE");
+                } else {
+                    active_deactive_button.setText("DEACTIVATE");
+                }
+
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            //Logger.getLogger(ViewOrders.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-            
-    
+
+
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-       
-        jTextField1.setEditable(true);
-        jTextField2.setEditable(true);
-        jTextField3.setEditable(true);
-        jTextField4.setEditable(true);
-        jTextField5.setEditable(true);
-        
+
+        user_name_text.setEditable(true);
+        email_text.setEditable(true);
+        phone_text.setEditable(true);
+        password_text.setEditable(true);
+        place_text.setEditable(true);
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        String name=jTextField1.getText();
-        String email=jTextField2.getText();
-        String phone_num=jTextField3.getText();
-        String password=jTextField4.getText();
-        String place=jTextField5.getText();
-        Dbcon dbcon=new Dbcon();
-        dbcon.update("update tbl_organisation set name='"+name+"',email_id='"+email+"',phone_num='"+phone_num+"',password='"+password+"',place='"+place+"',updated_at='"+System.currentTimeMillis()+"'where organisation_id='"+id+"'");
-        
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String name = user_name_text.getText();
+        String email = email_text.getText();
+        String phone_num = phone_text.getText();
+        String password = password_text.getText();
+        String place = place_text.getText();
+        Dbcon dbcon = new Dbcon();
+        dbcon.update("update tbl_organisation set name='" + name + "',email_id='" + email + "',phone_num='" + phone_num + "',password='" + password + "',place='" + place + "',updated_at='" + System.currentTimeMillis() + "' ,logo_image='" + organisationIconName + "' where organisation_id='" + id + "'");
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-       jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
+        user_name_text.setText("");
+        email_text.setText("");
+        phone_text.setText("");
+        password_text.setText("");
+        place_text.setText("");
         jLabel6.setText("");
+        disableAll();
+        jTable1.clearSelection();
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void active_deactive_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_active_deactive_buttonActionPerformed
         // TODO add your handling code here:
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        Dbcon dbcon=new Dbcon();
-        dbcon.update("update tbl_organisation set org_status=0 where organisation_id='"+id+"'");
-        //jTextField1.setText("");
-        //jTextField2.setText("");
-        //jTextField3.setText("");
-       // jTextField4.setText("");
-        //jTextField5.setText("");
-        //jTextField6.setText("");
-        
-        
-        
-    }//GEN-LAST:event_jButton4ActionPerformed
+        int showConfirmDialog = JOptionPane.showConfirmDialog(rootPane, "Are you sure ?");
+        if (showConfirmDialog == JOptionPane.OK_OPTION) {
+            String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+            String status = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+            System.out.println(status);
+            Dbcon dbcon = new Dbcon();
+            int nextStatusCode = 0;
+            if (status.toLowerCase().trim().equals("active")) {
+                nextStatusCode = 0;
+                jTable1.setValueAt("blocked", jTable1.getSelectedRow(), 2);
+                active_deactive_button.setText("ACTIVATE");
+            } else {
+                nextStatusCode = 1;
+                jTable1.setValueAt("active", jTable1.getSelectedRow(), 2);
+                active_deactive_button.setText("DEACTIVATE");
+            }
+            dbcon.update("update tbl_organisation set org_status=" + nextStatusCode + " where organisation_id='" + id + "'");
+        }
+
+    }//GEN-LAST:event_active_deactive_buttonActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter = new FileNameExtensionFilter(
-        "JPG & GIF Images", "jpg", "gif");
-    
-    chooser.setFileFilter(filter); 
-    int returnVal = chooser.showOpenDialog(this);
-    if(returnVal == JFileChooser.APPROVE_OPTION) {
-         chooser.getSelectedFile().getPath();
-       System.out.println("You chose to open this file: " +
-            chooser.getSelectedFile().getName());
-        BufferedImage img = null;
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "JPG & GIF Images", "jpg", "gif");
+
+        chooser.setFileFilter(filter);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            chooser.getSelectedFile().getPath();
+            System.out.println("You chose to open this file: "
+                    + chooser.getSelectedFile().getName());
+            BufferedImage img = null;
             try {
                 img = ImageIO.read(new File(chooser.getSelectedFile().getPath()));
-                Image scaledInstance = img.getScaledInstance(jLabel7.getWidth(), jLabel7.getHeight(), Image.SCALE_SMOOTH);
+                Image scaledInstance = img.getScaledInstance(organisation_logo_label.getWidth(), organisation_logo_label.getHeight(), Image.SCALE_SMOOTH);
                 ImageIcon imageIcon = new ImageIcon(scaledInstance);
-                jLabel7.setIcon(imageIcon);
+                organisation_logo_label.setIcon(imageIcon);
+
+                organisationIconName = System.currentTimeMillis() + "." + FilenameUtils.getExtension(chooser.getSelectedFile().getPath());
+                FileUtils.copyFile(chooser.getSelectedFile(), new File(Configuration.organisationImages + organisationIconName));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-           long size=(chooser.getSelectedFile().length())/1024;
-            
-    }
+            long size = (chooser.getSelectedFile().length()) / 1024;
+
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
@@ -447,17 +479,18 @@ public class ManageOrganization extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ManageOrganization().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton active_deactive_button;
+    private javax.swing.JTextField email_text;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
@@ -466,13 +499,12 @@ public class ManageOrganization extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel organisation_logo_label;
+    private javax.swing.JTextField password_text;
+    private javax.swing.JTextField phone_text;
+    private javax.swing.JTextField place_text;
+    private javax.swing.JTextField user_name_text;
     // End of variables declaration//GEN-END:variables
 }

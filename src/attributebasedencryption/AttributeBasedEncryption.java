@@ -6,6 +6,7 @@
 
 package attributebasedencryption;
 
+import General.Configuration;
 import view.MainLogin;
 
 /**
@@ -19,6 +20,7 @@ public class AttributeBasedEncryption {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Configuration.initializeEnvironment();
         MainLogin mainLogin=new MainLogin();
         mainLogin.setVisible(true);
     }
