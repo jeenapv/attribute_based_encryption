@@ -6,10 +6,18 @@
 package view;
 
 import Db.Dbcon;
+import General.Configuration;
 import java.awt.Component;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  *
@@ -18,6 +26,11 @@ import javax.swing.JOptionPane;
 public class ChooseFile extends javax.swing.JFrame {
 
     public static String path;
+    String selectedFilePath;
+    String attr_1_file_name;
+    String attr_2_file_size;
+    String attr_3_file_extension;
+    String attr_4_file_created_time;
 
     /**
      * Creates new form ChooseFile
@@ -116,18 +129,18 @@ public class ChooseFile extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String filename=jLabel2.getText();
-        if(filename.equals("")){
+        String filename = jLabel2.getText();
+        if (filename.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Choose file");
-        }else{
-        
-        Dbcon dbcon = new Dbcon();
-        int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id)values('" + path + "','"+DataMemberLogin.logged_in_user_id+"')");
-        if (ins > 0) {
-            this.dispose();
-            UploadFile uploadFile = new UploadFile();
-            uploadFile.setVisible(true);
-        }
+        } else {
+
+            Dbcon dbcon = new Dbcon();
+            int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id,attr_1 ,attr_2,attr_3,attr_4,created_at)values('" + selectedFilePath + "','" + DataMemberLogin.logged_in_user_id + "','" + attr_1_file_name + "','" + attr_2_file_size + "','" + attr_3_file_extension + "','" + attr_4_file_created_time + "','" + System.currentTimeMillis() + "')");
+            if (ins > 0) {
+                this.dispose();
+                UploadFile uploadFile = new UploadFile();
+                uploadFile.setVisible(true);
+            }
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -150,6 +163,18 @@ public class ChooseFile extends javax.swing.JFrame {
                 System.out.println(path);
                 String name = chooser.getSelectedFile().getName();
                 jLabel2.setText(name);
+
+                Path filePath = Paths.get(file.getPath());
+                BasicFileAttributes bfa = Files.readAttributes(filePath, BasicFileAttributes.class);
+
+                attr_1_file_name = FilenameUtils.getBaseName(file.getName());
+                attr_2_file_size = (file.length()) + "";
+                attr_3_file_extension = FilenameUtils.getExtension(file.getPath());
+                attr_4_file_created_time = bfa.creationTime().toMillis() + "";
+
+                selectedFilePath = System.currentTimeMillis() + "." + FilenameUtils.getExtension(path);
+                FileUtils.copyFile(file, new File(Configuration.dataCloud + selectedFilePath));
+
             } catch (Exception ex) {
                 System.out.println("problem accessing file" + file.getAbsolutePath());
             }
@@ -187,12 +212,12 @@ public class ChooseFile extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ChooseFile().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
@@ -15,14 +14,16 @@ import javax.swing.JOptionPane;
  * @author Jithinpv
  */
 public class DataMemberLogin extends javax.swing.JFrame {
- public static int logged_in_user_id=0;
+
+    public static int logged_in_user_id = 1;
+
     /**
      * Creates new form DataMemberLogin
      */
     public DataMemberLogin() {
         initComponents();
-         this.setLocationRelativeTo(null);
-        
+        this.setLocationRelativeTo(null);
+
     }
 
     /**
@@ -45,7 +46,11 @@ public class DataMemberLogin extends javax.swing.JFrame {
 
         jLabel1.setText("Username");
 
+        jTextField1.setText("k@gmail.com");
+
         jLabel2.setText("Password");
+
+        jPasswordField1.setText("123");
 
         jButton1.setText("LOGIN");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -106,36 +111,35 @@ public class DataMemberLogin extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String userName=jTextField1.getText();
-        String password=new String(jPasswordField1.getPassword());
-        if(userName.equals("")){
+        String userName = jTextField1.getText();
+        String password = new String(jPasswordField1.getPassword());
+        if (userName.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter username");
-        }else if(password.equals("")){
-             JOptionPane.showMessageDialog(rootPane, "Enter password");
-        }else{
-        Dbcon dbcon=new Dbcon();
-          ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
-        try {
-            if (r.next()) {
-                String id=r.getString(1);
-                logged_in_user_id=Integer.parseInt(id);
-                this.dispose();
-                DataMemberHome dataMemberHome = new DataMemberHome();
-                dataMemberHome.setVisible(true);
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter password");
+        } else {
+            Dbcon dbcon = new Dbcon();
+            ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
+            try {
+                if (r.next()) {
+                    String id = r.getString(1);
+                    logged_in_user_id = Integer.parseInt(id);
+                    this.dispose();
+                    DataMemberHome dataMemberHome = new DataMemberHome();
+                    dataMemberHome.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "invalid");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            else{
-                JOptionPane.showMessageDialog(rootPane, "invalid");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        MainLogin mainLogin=new MainLogin();
+        this.dispose();
+        MainLogin mainLogin = new MainLogin();
         mainLogin.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -168,12 +172,12 @@ public class DataMemberLogin extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new DataMemberLogin().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -26,6 +26,50 @@ public class ViewAllFiles extends javax.swing.JFrame {
     public ViewAllFiles() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadAllFileSend();
+    }
+
+    private void loadAllFileSend() {
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) all_files_table.getModel();
+        String query = "SELECT datam.name , "
+                + "enc.encryption_id, "
+                + "enc.encrypted_file_path, "
+                + "enc.attr_1, enc.attr_2, enc.attr_3, enc.attr_4, "
+                + "enc.created_at, "
+                + "org.name AS org_name "
+                + "FROM tbl_file_encryption_logs AS enc , "
+                + "tbl_data_member AS datam , "
+                + "tbl_organisation AS org "
+                + "WHERE enc.data_member_id=datam.data_member_id "
+                + "AND datam.organization_id = org.organisation_id";
+        ResultSet rs = dbcon.select(query);
+
+        try {
+            String arr[] = new String[10];
+            DefaultTableModel model = (DefaultTableModel) all_files_table.getModel();
+            while (rs.next()) {
+                String encryption_id = rs.getString("encryption_id");
+                String dataMemberName = rs.getString("name");
+                String org_name = rs.getString("org_name");
+                String fileName = rs.getString("attr_1");
+                String dateOfEncryption = getFormatedDate(rs.getString("created_at"), "dd MM YYYY");
+                String size = (Long.parseLong(rs.getString("attr_2")) / 1024) + " Kb";
+                String file_extension = rs.getString("attr_3");
+
+                arr[0] = encryption_id;
+                arr[1] = dataMemberName;
+                arr[2] = org_name;
+                arr[3] = fileName;
+                arr[4] = dateOfEncryption;
+                arr[5] = size;
+                arr[6] = file_extension;
+                model.addRow(arr);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -38,19 +82,21 @@ public class ViewAllFiles extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        all_files_table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        file_name_text = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        file_size_text = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        file_type_text = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        request_priority = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        request_status_label = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -59,19 +105,19 @@ public class ViewAllFiles extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        all_files_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "DATA MEMBER", "ORGANIZATION", "FILE", "DATE"
+                "ID", "DATA MEMBER", "ORGANIZATION", "FILE", "DATE", "size", "type"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -82,19 +128,21 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        all_files_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                all_files_tableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-        }
+        jScrollPane1.setViewportView(all_files_table);
+        all_files_table.getColumnModel().getColumn(0).setMinWidth(50);
+        all_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        all_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        all_files_table.getColumnModel().getColumn(5).setMinWidth(0);
+        all_files_table.getColumnModel().getColumn(5).setPreferredWidth(0);
+        all_files_table.getColumnModel().getColumn(5).setMaxWidth(0);
+        all_files_table.getColumnModel().getColumn(6).setMinWidth(0);
+        all_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
+        all_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
 
         jLabel1.setText("ALL FILES");
 
@@ -103,8 +151,6 @@ public class ViewAllFiles extends javax.swing.JFrame {
         jLabel3.setText("File Size");
 
         jLabel4.setText("File Type");
-
-        jLabel5.setText("Priority");
 
         jButton1.setText("REQUEST");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -122,48 +168,58 @@ public class ViewAllFiles extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Request priority");
+
+        request_priority.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "low", "medium", "high" }));
+
+        jLabel6.setText("Request status");
+
+        request_status_label.setText("Not requested yet");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(256, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(245, 245, 245))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(108, 108, 108)
+                .addGap(104, 104, 104)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
                 .addGap(28, 28, 28)
                 .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(245, 245, 245))
+                .addContainerGap(187, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(83, 83, 83)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(request_priority, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(file_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(request_status_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(file_type_text, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,29 +227,33 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(file_type_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                    .addComponent(jLabel6)
+                    .addComponent(request_status_label))
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(request_priority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addGap(28, 28, 28))
+                .addGap(37, 37, 37))
         );
 
         pack();
@@ -206,88 +266,150 @@ public class ViewAllFiles extends javax.swing.JFrame {
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
-     private String getFormatedDate(String dateString, String format) {
-        
-         try {
-             long dateMilli = Long.parseLong(dateString);
-        Date date = new Date(dateMilli);
-        SimpleDateFormat formatter = new SimpleDateFormat(format);
+    private String getFormatedDate(String dateString, String format) {
 
-        String formatted = formatter.format(date);
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
 
-        System.out.println("formatted " + formatted);
-        return formatted;
-         } catch (Exception e) {
-             return "date not found";
-         }
-        
+            String formatted = formatter.format(date);
+
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
+        }
+
     }
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs = dbcon.select("SELECT hp.name , s.encryption_id, s.encrypted_file_path, s.created_at,h.name FROM tbl_file_encryption_logs s INNER JOIN tbl_data_member hp   on s.data_member_id = hp.data_member_id INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id ");
-
-        try {
-            while (rs.next()) {
-               
-                // String date = date3.toString();
-                dt.addRow(new String[]{rs.getString(2), rs.getString(1), rs.getString(5), rs.getString(3), getFormatedDate(rs.getString(4),"dd MM YYYY")});
-            }
-            jTable1.setModel(dt);
-        } catch (SQLException ex) {
-           
-        }
-
-
     }//GEN-LAST:event_formWindowOpened
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void all_files_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_all_files_tableMouseClicked
         // TODO add your handling code here:
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String id = all_files_table.getValueAt(all_files_table.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
         try {
             if (rs.next()) {
                 String filename = rs.getString(2);
-                jTextField1.setText(filename);
-                String filesize = rs.getString(4);
-                jTextField2.setText(filesize);
-                String filetype = rs.getString(5);
-                jTextField3.setText(filetype);
+                String file_owner_data_member = rs.getString("data_member_id");
+                file_name_text.setText(filename);
+                String filesize = (Long.parseLong(rs.getString("attr_2").trim()) / 1024) + " Kb";
+                file_size_text.setText(filesize);
+                String filetype = rs.getString("attr_3");
+                file_type_text.setText(filetype);
+
+                String alreadyRequestedQuery = "select * from tbl_file_request where requested_data_member=" + DataMemberLogin.logged_in_user_id
+                        + " and file_owner_data_member=" + file_owner_data_member
+                        + " and encryption_id=" + id;
+                System.out.println(alreadyRequestedQuery);
+                ResultSet select = new Dbcon().select(alreadyRequestedQuery);
+                if (select.next()) {
+                    // already send a request
+                    String status = select.getString("status");
+                    if (status.equals("1")) {
+                        request_status_label.setText("Approved");
+                    } else if (status.equals("1")) {
+                        request_status_label.setText("Rejected");
+                    } else {
+                        request_status_label.setText("Pending");
+                    }
+                } else {
+                    // not send request yet
+                    request_status_label.setText("Not requested yet");
+                }
+
 
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_all_files_tableMouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String priority = jTextField4.getText();
-        if (priority.equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Enter priority");
-        } else {
-            String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-            String dataMember = jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString();
-            String organization = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
-            String file = jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString();
-            String date = jTable1.getValueAt(jTable1.getSelectedRow(), 4).toString();
-            Dbcon dbcon = new Dbcon();
-            ResultSet rs = dbcon.select("select data_member_id from tbl_file_encryption_logs where encryption_id='" + id + "'");
+        String priority = request_priority.getSelectedItem().toString();
 
-            try {
-                if (rs.next()) {
-                    String member_id = rs.getString(1);
-                    dbcon.insert("insert into tbl_file_request(requested_data_member,file_owner_data_member,encryption_id,requested_date,request_priority)values('" + DataMemberLogin.logged_in_user_id + "','" + member_id + "','" + id + "','" + System.currentTimeMillis() + "','" + priority + "')");
+        String id = all_files_table.getValueAt(all_files_table.getSelectedRow(), 0).toString();
+        String dataMember = all_files_table.getValueAt(all_files_table.getSelectedRow(), 1).toString();
+        String organization = all_files_table.getValueAt(all_files_table.getSelectedRow(), 2).toString();
+        String file = all_files_table.getValueAt(all_files_table.getSelectedRow(), 3).toString();
+        String date = all_files_table.getValueAt(all_files_table.getSelectedRow(), 4).toString();
+        Dbcon dbcon = new Dbcon();
+        ResultSet rs = dbcon.select("select data_member_id from tbl_file_encryption_logs where encryption_id='" + id + "'");
+
+        try {
+            if (rs.next()) {
+                int priorityValue = 0;
+                if (priority.trim().toLowerCase().equals("low")) {
+                    priorityValue = 0;
+                } else if (priority.trim().toLowerCase().equals("medium")) {
+                    priorityValue = 1;
+                } else if (priority.trim().toLowerCase().equals("high")) {
+                    priorityValue = 2;
                 }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+
+                String member_id = rs.getString(1);
+
+                if (Integer.parseInt(member_id.trim()) == DataMemberLogin.logged_in_user_id) {
+                    JOptionPane.showMessageDialog(rootPane, "Dont have to send request to your own file");
+                } else {
+                    String alreadyRequestedQuery = "select * from tbl_file_request where requested_data_member=" + DataMemberLogin.logged_in_user_id
+                            + " and file_owner_data_member=" + member_id
+                            + " and encryption_id=" + id;
+                    System.out.println(alreadyRequestedQuery);
+                    ResultSet select = new Dbcon().select(alreadyRequestedQuery);
+                    if (select.next()) {
+                        JOptionPane.showMessageDialog(rootPane, "Already requested file permission");
+                    } else {
+                        int ins = dbcon.insert("insert into tbl_file_request(requested_data_member, "
+                                + "file_owner_data_member, "
+                                + "encryption_id, "
+                                + "requested_date, "
+                                + "request_priority,is_inter_company_file_request) "
+                                + "values('" + DataMemberLogin.logged_in_user_id + "','" + member_id + "','" + id + "','" + System.currentTimeMillis() + "','" + priorityValue + "'," + checkInterCompanyFileRequest(DataMemberLogin.logged_in_user_id + "", member_id) + ")");
+                        if (ins == 1) {
+                            JOptionPane.showMessageDialog(rootPane, "Sucessfully requested to the file owner. Waiting for permission");
+                            request_status_label.setText("Pending");
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Could not send request now. Please try again later");
+                        }
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private int checkInterCompanyFileRequest(String fromUserId, String toUserId) {
+        int companySame = 0;
+        try {
+            String sql = "select organization_id from tbl_data_member where data_member_id=" + fromUserId;
+            ResultSet rs1 = new Dbcon().select(sql);
+            String organisation1 = "";
+            String organisation2 = "";
+            if (rs1.next()) {
+                organisation1 = rs1.getString(1);
+            }
+            sql = "select organization_id from tbl_data_member where data_member_id=" + toUserId;
+            ResultSet rs2 = new Dbcon().select(sql);
+            if (rs2.next()) {
+                organisation2 = rs2.getString(1);
             }
 
+            if (organisation1.equals(organisation2)) {
+                companySame = 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        return companySame;
+    }
 
     /**
      * @param args the command line arguments
@@ -318,13 +440,17 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ViewAllFiles().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable all_files_table;
+    private javax.swing.JTextField file_name_text;
+    private javax.swing.JTextField file_size_text;
+    private javax.swing.JTextField file_type_text;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -333,11 +459,9 @@ public class ViewAllFiles extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JComboBox request_priority;
+    private javax.swing.JLabel request_status_label;
     // End of variables declaration//GEN-END:variables
 }

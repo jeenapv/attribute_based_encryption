@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
@@ -22,6 +21,34 @@ public class DataMemberHome extends javax.swing.JFrame {
     public DataMemberHome() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadFileRequests();
+    }
+
+    private void loadFileRequests() {
+        try {
+            Dbcon dbcon = new Dbcon();
+            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+            String str = "SELECT filereq.request_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,"
+                    + " datam.name,"
+                    + " org.name,"
+                    + " encrptlog.attr_1"
+                    + " FROM "
+                    + " tbl_file_request AS filereq , "
+                    + " tbl_data_member AS datam ,"
+                    + " tbl_organisation AS org,"
+                    + " tbl_file_encryption_logs AS encrptlog"
+                    + " WHERE "
+                    + " filereq.requested_data_member = datam.data_member_id AND"
+                    + " org.organisation_id = datam.organization_id AND"
+                    + " encrptlog.encryption_id = filereq.encryption_id AND"
+                    + " filereq.file_owner_data_member =" + DataMemberLogin.logged_in_user_id;
+            ResultSet rs = dbcon.select(str);
+
+            // TO DO
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -186,64 +213,61 @@ public class DataMemberHome extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ViewAllFiles viewAllFiles=new ViewAllFiles();
+        ViewAllFiles viewAllFiles = new ViewAllFiles();
         viewAllFiles.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ChooseFile chooseFile=new ChooseFile();
+        ChooseFile chooseFile = new ChooseFile();
         chooseFile.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        EncryptionHistory encryptionHistory=new EncryptionHistory();
+        EncryptionHistory encryptionHistory = new EncryptionHistory();
         encryptionHistory.setVisible(true);
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DataMemberTransferHistory dataMemberTransferHistory=new DataMemberTransferHistory();
+        DataMemberTransferHistory dataMemberTransferHistory = new DataMemberTransferHistory();
         dataMemberTransferHistory.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ViewRequestedFileStatus viewRequestedFileStatus=new ViewRequestedFileStatus();
+        ViewRequestedFileStatus viewRequestedFileStatus = new ViewRequestedFileStatus();
         viewRequestedFileStatus.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        MainLogin mainlogin=new MainLogin();
+        MainLogin mainlogin = new MainLogin();
         mainlogin.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-         Dbcon dbcon = new Dbcon();
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        dbcon.update("update tbl_file_request set approve_reject_date='"+System.currentTimeMillis()+"' where request_id='"+id+"'");
+        Dbcon dbcon = new Dbcon();
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' where request_id='" + id + "'");
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs=dbcon.select("SELECT hp.name ,s.request_priority, s.request_id,s.requested_date,s.status, th.encrypted_file_path,h.name FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.requested_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member=2 and th.encryption_id=s.encryption_id ");
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        dbcon.update("update tbl_file_request set approve_reject_date='"+System.currentTimeMillis()+"' where request_id='"+id+"'");
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' where request_id='" + id + "'");
     }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
@@ -275,12 +299,12 @@ public class DataMemberHome extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new DataMemberHome().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -9,6 +9,7 @@ import Db.Dbcon;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -25,6 +26,54 @@ public class EncryptionHistory extends javax.swing.JFrame {
     public EncryptionHistory() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadFileHistory();
+    }
+
+    private void loadFileHistory() {
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel model = (DefaultTableModel) history_table.getModel();
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where data_member_id='" + DataMemberLogin.logged_in_user_id + "'");
+        try {
+            String arr[] = new String[10];
+            while (rs.next()) {
+                String date1 = rs.getString(11);
+                long date2 = Long.parseLong(date1);
+                String date3 = new Date(date2).toString();
+
+                String encryption_id = rs.getString("encryption_id");
+                String fileName = rs.getString("attr_1");
+                String fileSize = (Long.parseLong(rs.getString("attr_2"))/1024) + " Kb";
+                String fileType = rs.getString("attr_3");
+                String fileCreated = getFormatedDate(rs.getString("created_at"), "dd MM YYYY");
+
+                arr[0] = encryption_id;
+                arr[1] = fileName;
+                arr[2] = fileSize;
+                arr[3] = fileType;
+                arr[4] = fileCreated;
+                model.addRow(arr);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private String getFormatedDate(String dateString, String format) {
+
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+            String formatted = formatter.format(date);
+
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
+        }
+
     }
 
     /**
@@ -38,7 +87,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        history_table = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
@@ -56,7 +105,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
         jLabel1.setText("Encryption History");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        history_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -68,7 +117,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
                 java.lang.Integer.class, java.lang.String.class, java.lang.Long.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -79,12 +128,15 @@ public class EncryptionHistory extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        history_table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                history_tableMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(history_table);
+        history_table.getColumnModel().getColumn(0).setMinWidth(50);
+        history_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        history_table.getColumnModel().getColumn(0).setMaxWidth(50);
 
         jLabel2.setText("Public Key");
 
@@ -104,11 +156,10 @@ public class EncryptionHistory extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(243, 243, 243)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(243, 243, 243)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
@@ -133,7 +184,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(224, 224, 224)
                                 .addComponent(jButton1)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 204, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -172,43 +223,27 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where data_member_id='"+DataMemberLogin.logged_in_user_id+"'");
-        try {
-            while (rs.next()) {
-                String date1 = rs.getString(11);
-                long date2 = Long.parseLong(date1);
-                String date3 = new Date(date2).toString();
-
-                dt.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(5), date3});
-            }
-            jTable1.setModel(dt);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
     }//GEN-LAST:event_formWindowOpened
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void history_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_history_tableMouseClicked
         // TODO add your handling code here:
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String id = history_table.getValueAt(history_table.getSelectedRow(), 0).toString();
         //System.out.println(id);
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
         try {
-            if(rs.next()){
-                String pubicKey=rs.getString(3);
+            if (rs.next()) {
+                String pubicKey = rs.getString(3);
                 jTextField1.setText(pubicKey);
-                String masterKey=rs.getString(8);
+                String masterKey = rs.getString(8);
                 jTextField2.setText(masterKey);
-                String secretKey=rs.getString(9);
+                String secretKey = rs.getString(9);
                 jTextField3.setText(secretKey);
             }
         } catch (SQLException ex) {
-           
         }
-        
-    }//GEN-LAST:event_jTable1MouseClicked
+
+    }//GEN-LAST:event_history_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -239,20 +274,20 @@ public class EncryptionHistory extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new EncryptionHistory().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable history_table;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
