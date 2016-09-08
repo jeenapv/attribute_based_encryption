@@ -7,6 +7,9 @@ package view;
 
 import Db.Dbcon;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,11 +29,14 @@ public class DataMemberHome extends javax.swing.JFrame {
 
     private void loadFileRequests() {
         try {
+            approve_button.setEnabled(false);
+            reject_button.setEnabled(false);
+
             Dbcon dbcon = new Dbcon();
-            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-            String str = "SELECT filereq.request_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,"
-                    + " datam.name,"
-                    + " org.name,"
+            DefaultTableModel model = (DefaultTableModel) request_table.getModel();
+            String str = "SELECT filereq.request_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,filereq.is_inter_company_file_request, "
+                    + " datam.name as dataMemName,"
+                    + " org.name as org_name,"
                     + " encrptlog.attr_1"
                     + " FROM "
                     + " tbl_file_request AS filereq , "
@@ -44,10 +50,63 @@ public class DataMemberHome extends javax.swing.JFrame {
                     + " filereq.file_owner_data_member =" + DataMemberLogin.logged_in_user_id;
             ResultSet rs = dbcon.select(str);
 
-            // TO DO
+            String arr[] = new String[10];
+            while (rs.next()) {
+                String request_id = rs.getString("request_id");
+                String dataMemName = rs.getString("dataMemName");
+                String org_name = rs.getString("org_name");
+                String attr_1 = rs.getString("attr_1");
+                String requested_date = getFormatedDate(rs.getString("requested_date"), "dd MM YYYY");
+                String request_priority = rs.getString("request_priority").trim();
+                if (request_priority.equals("0")) {
+                    request_priority = "Low";
+                } else if (request_priority.equals("1")) {
+                    request_priority = "Medium";
+                } else if (request_priority.equals("2")) {
+                    request_priority = "High";
+                }
+
+                String status = rs.getString("status").trim();
+
+                if (status.equals("0")) {
+                    status = "Rejected";
+                } else if (status.equals("1")) {
+                    status = "Approved";
+                } else if (status.equals("2")) {
+                    status = "Pending";
+                }
+
+                String is_inter_company_file_request = rs.getString("is_inter_company_file_request");
+
+                arr[0] = request_id;
+                arr[1] = dataMemName;
+                arr[2] = org_name;
+                arr[3] = attr_1;
+                arr[4] = requested_date;
+                arr[5] = request_priority;
+                arr[6] = status;
+                arr[7] = is_inter_company_file_request;
+
+                model.addRow(arr);
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getFormatedDate(String dateString, String format) {
+
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
+            String formatted = formatter.format(date);
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
         }
     }
 
@@ -68,9 +127,9 @@ public class DataMemberHome extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        request_table = new javax.swing.JTable();
+        approve_button = new javax.swing.JButton();
+        reject_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -123,27 +182,48 @@ public class DataMemberHome extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        request_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "NAME", "ORGANIZATION", "FILE", "DATE", "PRIORITY", "STATUS"
+                "ID", "NAME", "ORGANIZATION", "FILE", "DATE", "PRIORITY", "STATUS", "inter_org"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
-        jButton7.setText("APPROVE");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        request_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                request_tableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(request_table);
+        request_table.getColumnModel().getColumn(0).setMinWidth(50);
+        request_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        request_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        request_table.getColumnModel().getColumn(4).setResizable(false);
+        request_table.getColumnModel().getColumn(6).setResizable(false);
+        request_table.getColumnModel().getColumn(7).setMinWidth(0);
+        request_table.getColumnModel().getColumn(7).setPreferredWidth(0);
+        request_table.getColumnModel().getColumn(7).setMaxWidth(0);
+
+        approve_button.setText("APPROVE");
+        approve_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                approve_buttonActionPerformed(evt);
             }
         });
 
-        jButton8.setText("REJECT");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        reject_button.setText("REJECT");
+        reject_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                reject_buttonActionPerformed(evt);
             }
         });
 
@@ -175,14 +255,13 @@ public class DataMemberHome extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(260, 260, 260)
+                        .addComponent(approve_button)
+                        .addGap(37, 37, 37)
+                        .addComponent(reject_button)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(260, 260, 260)
-                .addComponent(jButton7)
-                .addGap(37, 37, 37)
-                .addComponent(jButton8)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,8 +281,8 @@ public class DataMemberHome extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7)
-                    .addComponent(jButton8))
+                    .addComponent(approve_button)
+                    .addComponent(reject_button))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -252,23 +331,80 @@ public class DataMemberHome extends javax.swing.JFrame {
         mainlogin.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void approve_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_approve_buttonActionPerformed
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' where request_id='" + id + "'");
-    }//GEN-LAST:event_jButton7ActionPerformed
+
+        String request_id = request_table.getValueAt(request_table.getSelectedRow(), 0).toString();
+        String status = request_table.getValueAt(request_table.getSelectedRow(), 6).toString();
+        String is_inter_company_file_request = request_table.getValueAt(request_table.getSelectedRow(), 7).toString();
+
+        if (is_inter_company_file_request.equals("0")) {
+            // iside company request
+            if (status.toLowerCase().equals("approved") || status.toLowerCase().equals("rejected")) {
+                JOptionPane.showMessageDialog(rootPane, "Already approved");
+            } else {
+                Dbcon dbcon = new Dbcon();
+                int updated = dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' , status='1' where request_id='" + request_id + "'");
+                if (updated > 0) {
+                    request_table.setValueAt("Approved", request_table.getSelectedRow(), 6);
+                    approve_button.setEnabled(false);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Could not approve now, please try again later");
+                }
+            }
+        } else {
+            // outside company request
+        }
+
+
+    }//GEN-LAST:event_approve_buttonActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowOpened
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void reject_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reject_buttonActionPerformed
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' where request_id='" + id + "'");
-    }//GEN-LAST:event_jButton8ActionPerformed
+        String request_id = request_table.getValueAt(request_table.getSelectedRow(), 0).toString();
+        String status = request_table.getValueAt(request_table.getSelectedRow(), 6).toString();
+        String is_inter_company_file_request = request_table.getValueAt(request_table.getSelectedRow(), 7).toString();
+
+        if (is_inter_company_file_request.equals("0")) {
+            // iside company request
+            if (status.toLowerCase().equals("approved") || status.toLowerCase().equals("rejected")) {
+                JOptionPane.showMessageDialog(rootPane, "Already rejected");
+            } else {
+                Dbcon dbcon = new Dbcon();
+                int updated = dbcon.update("update tbl_file_request set approve_reject_date='" + System.currentTimeMillis() + "' , status='0' where request_id='" + request_id + "'");
+                if (updated > 0) {
+                    request_table.setValueAt("Rejected", request_table.getSelectedRow(), 6);
+                    reject_button.setEnabled(false);
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Could not reject now, please try again later");
+                }
+            }
+        } else {
+            // outside company request
+        }
+    }//GEN-LAST:event_reject_buttonActionPerformed
+
+private void request_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_request_tableMouseClicked
+
+    String request_id = request_table.getValueAt(request_table.getSelectedRow(), 0).toString();
+    String status = request_table.getValueAt(request_table.getSelectedRow(), 6).toString();
+    String is_inter_company_file_request = request_table.getValueAt(request_table.getSelectedRow(), 7).toString();
+
+    if (status.toLowerCase().equals("approved") || status.toLowerCase().equals("rejected")) {
+        approve_button.setEnabled(false);
+        reject_button.setEnabled(false);
+    } else {
+        approve_button.setEnabled(true);
+        reject_button.setEnabled(true);
+    }
+
+
+    // TODO add your handling code here:
+}//GEN-LAST:event_request_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -306,16 +442,16 @@ public class DataMemberHome extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton approve_button;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton reject_button;
+    private javax.swing.JTable request_table;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,16 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
+import General.Configuration;
+import java.awt.Desktop;
+import java.io.File;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  *
@@ -26,6 +31,36 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
     public ViewRequestedFileStatus() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadFileRequestDetails();
+        download_button.setEnabled(false);
+    }
+
+    private void loadFileRequestDetails() {
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel dt = (DefaultTableModel) requested_files_table.getModel();
+        ResultSet rs = dbcon.select("SELECT hp.name , s.request_id,s.requested_date,s.status, th.attr_1,h.name, th.encrypted_file_path FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.file_owner_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member='" + DataMemberLogin.logged_in_user_id + "' and  th.encryption_id=s.encryption_id");
+        try {
+            while (rs.next()) {
+                String date1 = rs.getString(3);
+                long date2 = Long.parseLong(date1);
+                Date date3 = new Date(date2);
+                String date = date3.toString();
+                String status_string = rs.getString(4);
+                int status_int = Integer.parseInt(status_string);
+                String status;
+                if (status_int == 2) {
+                    status = "pending";
+                } else if (status_int == 1) {
+                    status = "approved";
+                } else {
+                    status = "rejected";
+                }
+                dt.addRow(new String[]{rs.getString(2), rs.getString(5), rs.getString(1), rs.getString(6), date, status, rs.getString("encrypted_file_path")});
+            }
+            requested_files_table.setModel(dt);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -38,9 +73,11 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        requested_files_table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        download_button = new javax.swing.JButton();
+        progress_bar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -49,19 +86,19 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        requested_files_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "FILE", "DATA MEMBER", "ORGANIZATION", "REQUESTED DATE", "STATUS"
+                "ID", "FILE", "DATA MEMBER", "ORGANIZATION", "REQUESTED DATE", "STATUS", "FILE PATH"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false
+                false, false, false, false, true, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -72,7 +109,18 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        requested_files_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                requested_files_tableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(requested_files_table);
+        requested_files_table.getColumnModel().getColumn(0).setMinWidth(50);
+        requested_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        requested_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        requested_files_table.getColumnModel().getColumn(6).setMinWidth(0);
+        requested_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
+        requested_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
 
         jLabel1.setText("Requested File Status");
 
@@ -83,22 +131,33 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
             }
         });
 
+        download_button.setText("Download file");
+        download_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                download_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(199, 199, 199))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(275, 275, 275)
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(199, 199, 199))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(download_button)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(275, 275, 275))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,9 +166,13 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jButton1)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(download_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         pack();
@@ -118,38 +181,70 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        DataMemberHome dataMemberHome=new DataMemberHome();
+        DataMemberHome dataMemberHome = new DataMemberHome();
         dataMemberHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-       ResultSet rs= dbcon.select("SELECT hp.name , s.request_id,s.requested_date,s.status, th.encrypted_file_path,h.name FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.file_owner_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member='"+DataMemberLogin.logged_in_user_id+"' and  th.encryption_id=s.encryption_id");
-        try {
-            while(rs.next()){
-                String date1 = rs.getString(3);
-                long date2 = Long.parseLong(date1);
-                Date date3 = new Date(date2);
-                String date = date3.toString();
-                String status_string=rs.getString(4);
-                int status_int=Integer.parseInt(status_string);
-                String status;
-                if(status_int==2){
-                    status="pending";
-                }else if(status_int==1){
-                    status="approved";
-                }else{
-                    status="rejected";
-                }
-                dt.addRow(new String[]{rs.getString(2), rs.getString(5), rs.getString(1), rs.getString(6),date,status});
-            }
-             jTable1.setModel(dt);
-        } catch (SQLException ex) {
-           ex.printStackTrace();
-        }
     }//GEN-LAST:event_formWindowOpened
+
+    class ProgressBarThread extends Thread {
+
+        public void run() {
+            int value = 0;
+            try {
+                while (value <= 100) {
+                    progress_bar.setValue(value += 5);
+                    Thread.sleep(10);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            downloadSelectedFileWithoutDecryption();
+        }
+    }
+
+    private void downloadSelectedFileWithoutDecryption() {
+        String requestedFilePath = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 6).toString();
+        String requestedFileName = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 1).toString();
+        System.out.println(requestedFilePath);
+        File fromFile = new File(Configuration.dataCloud + requestedFilePath);
+        File temporaryFileDirectory = new File(Configuration.temporaryFilePath + System.currentTimeMillis());
+        if (temporaryFileDirectory.mkdir()) {
+            File toFile = new File(temporaryFileDirectory.getPath() + "/" + requestedFileName + "." + FilenameUtils.getExtension(requestedFilePath));
+
+            try {
+                FileUtils.copyFile(fromFile, toFile);
+                Desktop desktop = Desktop.getDesktop();
+                desktop.open(temporaryFileDirectory);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(rootPane, "Could not open the file. Please check directory " + temporaryFileDirectory);
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Could not get file permission in computer to make new folder at " + temporaryFileDirectory);
+        }
+        download_button.setEnabled(false);
+    }
+
+private void download_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_download_buttonActionPerformed
+    // TODO add your handling code here:
+    new ProgressBarThread().start();
+}//GEN-LAST:event_download_buttonActionPerformed
+
+private void requested_files_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_requested_files_tableMouseClicked
+
+    download_button.setEnabled(true);
+    String requested_file_id = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 0).toString();
+    String requested_file_status = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 5).toString();
+    if (requested_file_status.trim().toLowerCase().equals("approved")) {
+        // file is approved, decrypt and retreive
+    } else {
+        // not authorised for file
+    }
+
+    // TODO add your handling code here:
+}//GEN-LAST:event_requested_files_tableMouseClicked
 
     /**
      * @param args the command line arguments
@@ -180,16 +275,18 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ViewRequestedFileStatus().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton download_button;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JProgressBar progress_bar;
+    private javax.swing.JTable requested_files_table;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class OrganizationLogin extends javax.swing.JFrame {
 
-    public static int logged_in_user_id = 0;
+    public static int logged_in_org_id = 0;
 
     /**
      * Creates new form OrganizationLogin
@@ -120,7 +120,7 @@ public class OrganizationLogin extends javax.swing.JFrame {
         try {
             if (rst.next()) {
                 String id = rst.getString(1);
-                logged_in_user_id = Integer.parseInt(id);
+                logged_in_org_id = Integer.parseInt(id);
                 this.dispose();
                 OrganizationHome organizationHome = new OrganizationHome();
                 organizationHome.setVisible(true);

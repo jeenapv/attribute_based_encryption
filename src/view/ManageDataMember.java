@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import Db.Dbcon;
@@ -254,26 +253,26 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-       this.dispose();
-        OrganizationHome organizationHome=new OrganizationHome();
+        this.dispose();
+        OrganizationHome organizationHome = new OrganizationHome();
         organizationHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        Dbcon dbcon=new Dbcon();
-        dbcon.update("update tbl_data_member set org_status=0 where data_member_id='"+id+"'");
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        Dbcon dbcon = new Dbcon();
+        dbcon.update("update tbl_data_member set org_status=0 where data_member_id='" + id + "'");
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-        Dbcon dbcon=new Dbcon();
+        Dbcon dbcon = new Dbcon();
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        ResultSet rs=dbcon.select("select * from tbl_data_member order by data_member_id asc");
+        ResultSet rs = dbcon.select("select * from tbl_data_member where organization_id=" + OrganizationLogin.logged_in_org_id);
         try {
-            while(rs.next()){
-                dt.addRow(new String[]{rs.getString(1),rs.getString(2),rs.getString(10)});
+            while (rs.next()) {
+                dt.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(10)});
             }
             jTable1.setModel(dt);
         } catch (SQLException ex) {
@@ -293,25 +292,25 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-         String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        String name=jTextField1.getText();
-        String email=jTextField2.getText();
-        String dob=jTextField3.getText();
-        String address=jTextArea1.getText();
-        String phone_num=jTextField5.getText();
-        String password=jTextField6.getText();
-        Dbcon dbcon=new Dbcon();
-        dbcon.update("update tbl_data_member set name='"+name+"',email_id='"+email+"',date_of_birth='"+dob+"',address='"+address+"',phone_number='"+phone_num+"',password='"+password+"',updated_at='"+System.currentTimeMillis()+"'where data_member_id='"+id+"'");
-        
-        
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String name = jTextField1.getText();
+        String email = jTextField2.getText();
+        String dob = jTextField3.getText();
+        String address = jTextArea1.getText();
+        String phone_num = jTextField5.getText();
+        String password = jTextField6.getText();
+        Dbcon dbcon = new Dbcon();
+        dbcon.update("update tbl_data_member set name='" + name + "',email_id='" + email + "',date_of_birth='" + dob + "',address='" + address + "',phone_number='" + phone_num + "',password='" + password + "',updated_at='" + System.currentTimeMillis() + "'where data_member_id='" + id + "'");
+
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        String id=jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
-        ResultSet rs = dbcon.select("select * from tbl_data_member where data_member_id='"+id+"'");
-        String name, email, phone_num, password, place,address,dob;
+        ResultSet rs = dbcon.select("select * from tbl_data_member where data_member_id='" + id + "'");
+        String name, email, phone_num, password, place, address, dob;
         BufferedImage img = null;
         try {
             if (rs.next()) {
@@ -321,18 +320,18 @@ public class ManageDataMember extends javax.swing.JFrame {
                 jTextField2.setText(email);
                 dob = rs.getString(4);
                 jTextField3.setText(dob);
-                address=rs.getString(5);
+                address = rs.getString(5);
                 jTextArea1.setText(address);
                 phone_num = rs.getString(6);
                 jTextField5.setText(phone_num);
                 password = rs.getString(7);
                 jTextField6.setText(password);
-                
+
             }
-        }catch(Exception e){
-             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        
+
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -343,7 +342,7 @@ public class ManageDataMember extends javax.swing.JFrame {
         jTextArea1.setText("");
         jTextField5.setText("");
         jTextField6.setText("");
-        
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -375,12 +374,12 @@ public class ManageDataMember extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new ManageDataMember().setVisible(true);
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

@@ -27,6 +27,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         loadAllFileSend();
+        clearAll();
     }
 
     private void loadAllFileSend() {
@@ -90,7 +91,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
         file_size_text = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         file_type_text = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        request_button = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -148,18 +149,29 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
         jLabel2.setText("File Name");
 
+        file_name_text.setEditable(false);
+
         jLabel3.setText("File Size");
+
+        file_size_text.setEditable(false);
 
         jLabel4.setText("File Type");
 
-        jButton1.setText("REQUEST");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        file_type_text.setEditable(false);
+
+        request_button.setText("REQUEST");
+        request_button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                request_buttonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("CANCEL");
+        jButton2.setText("CLEAR");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("HOME");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +186,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
         jLabel6.setText("Request status");
 
-        request_status_label.setText("Not requested yet");
+        request_status_label.setText(" ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -190,12 +202,12 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(104, 104, 104)
-                .addComponent(jButton1)
+                .addComponent(request_button)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
                 .addGap(28, 28, 28)
                 .addComponent(jButton3)
-                .addContainerGap(187, Short.MAX_VALUE))
+                .addContainerGap(193, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(83, 83, 83)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -250,7 +262,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                     .addComponent(jLabel5))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(request_button)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addGap(37, 37, 37))
@@ -300,7 +312,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 file_size_text.setText(filesize);
                 String filetype = rs.getString("attr_3");
                 file_type_text.setText(filetype);
-
+                request_button.setEnabled(true);
                 String alreadyRequestedQuery = "select * from tbl_file_request where requested_data_member=" + DataMemberLogin.logged_in_user_id
                         + " and file_owner_data_member=" + file_owner_data_member
                         + " and encryption_id=" + id;
@@ -329,7 +341,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
 
     }//GEN-LAST:event_all_files_tableMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void request_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_request_buttonActionPerformed
         // TODO add your handling code here:
         String priority = request_priority.getSelectedItem().toString();
 
@@ -384,7 +396,22 @@ public class ViewAllFiles extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_request_buttonActionPerformed
+
+    private void clearAll() {
+        request_priority.setSelectedIndex(0);
+        file_name_text.setText("");
+        file_size_text.setText("");
+        file_type_text.setText("");
+        request_status_label.setText("");
+        all_files_table.clearSelection();
+        request_button.setEnabled(false);
+    }
+private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    clearAll();
+
+    // TODO add your handling code here:
+}//GEN-LAST:event_jButton2ActionPerformed
 
     private int checkInterCompanyFileRequest(String fromUserId, String toUserId) {
         int companySame = 0;
@@ -451,7 +478,6 @@ public class ViewAllFiles extends javax.swing.JFrame {
     private javax.swing.JTextField file_name_text;
     private javax.swing.JTextField file_size_text;
     private javax.swing.JTextField file_type_text;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -461,6 +487,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton request_button;
     private javax.swing.JComboBox request_priority;
     private javax.swing.JLabel request_status_label;
     // End of variables declaration//GEN-END:variables

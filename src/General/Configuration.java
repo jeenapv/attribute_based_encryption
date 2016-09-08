@@ -25,6 +25,7 @@ public class Configuration {
     public static String dataCloud = "dataCloud/";
     public static String organisationImages = "organisationImages/";
     public static String sendPasswordSubject = "Attribute based encryption - forgot password ";
+    public static String temporaryFilePath = "temporaryFilePath/";
 
     public static void setIconOnLabel(String fileString, JLabel label) {
         // convert string file path to image icona and set on this label
@@ -48,7 +49,7 @@ public class Configuration {
             ImageIcon imageIcon = new ImageIcon(scaledInstance);
             label.setIcon(imageIcon);
         } catch (IOException e) {
-            System.out.println("Could not load " + organisationImages + fileString );
+            System.out.println("Could not load " + organisationImages + fileString);
             label.setIcon(null);
         }
     }
@@ -81,6 +82,13 @@ public class Configuration {
             if (!f_organisationImages.exists()) {
                 f_organisationImages.mkdir();
             }
+
+            File f_temporaryFilePath = new File(temporaryFilePath);
+            if (!f_temporaryFilePath.exists()) {
+                f_temporaryFilePath.mkdir();
+            }
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
