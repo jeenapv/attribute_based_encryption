@@ -323,7 +323,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                     String status = select.getString("status");
                     if (status.equals("1")) {
                         request_status_label.setText("Approved");
-                    } else if (status.equals("1")) {
+                    } else if (status.equals("0")) {
                         request_status_label.setText("Rejected");
                     } else {
                         request_status_label.setText("Pending");
@@ -429,7 +429,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
                 organisation2 = rs2.getString(1);
             }
 
-            if (organisation1.equals(organisation2)) {
+            if (!organisation1.equals(organisation2)) {
                 companySame = 1;
             }
         } catch (Exception e) {

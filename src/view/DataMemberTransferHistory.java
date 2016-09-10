@@ -6,6 +6,15 @@
 
 package view;
 
+import Db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Jithinpv
@@ -18,6 +27,7 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
     public DataMemberTransferHistory() {
         initComponents();
         this.setLocationRelativeTo(null);
+        loadAllTransations() ;
     }
 
     /**
@@ -30,28 +40,25 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        transaction_table = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        transaction_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "ID", "DATAMEMBER", "FILE", "STATUS", "DATE"
+                "ID", "DATAMEMBER", "ORGANIZATION", "FILE", "STATUS", "DATE"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -62,7 +69,10 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(transaction_table);
+        if (transaction_table.getColumnModel().getColumnCount() > 0) {
+            transaction_table.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         jLabel1.setText("View Transaction History");
 
@@ -80,15 +90,15 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(164, 164, 164)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(205, 205, 205)
-                        .addComponent(jButton1)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                        .addGap(256, 256, 256)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,6 +115,35 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void loadAllTransations() {
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel model = (DefaultTableModel) transaction_table.getModel();
+        String str="SELECT filereq.request_id,filereq.approve_reject_date, filereq.requested_data_member ,filereq.status, datam.name as dataMemName, org.name as org_name, encrptlog.attr_1 FROM  tbl_file_request AS filereq ,  tbl_data_member AS datam , tbl_organisation AS org, tbl_file_encryption_logs AS encrptlog WHERE  filereq.requested_data_member = datam.data_member_id AND org.organisation_id = datam.organization_id AND encrptlog.encryption_id = filereq.encryption_id AND filereq.file_owner_data_member ='"+DataMemberLogin.logged_in_user_id+"' and filereq.status=1";
+        System.out.println(str);
+        ResultSet rs=dbcon.select(str);
+        try {
+            String arr [] = new String[6];
+            while(rs.next()){
+               String id=rs.getString("request_id");
+               String datamember=rs.getString("dataMemName");
+               String orgName=rs.getString("org_name");
+               String file=rs.getString("attr_1");
+               String date=getFormatedDate(rs.getString("approve_reject_date"),"dd mm yyyy");
+               String status="Approved";
+               
+               arr[0] = id;
+               arr[1] = datamember;
+               arr[2] = orgName;
+               arr[3] = file;
+               arr[5] = date;
+                arr[4] = status;
+               model.addRow(arr);
+            }
+             
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -113,6 +152,22 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+     private String getFormatedDate(String dateString, String format) {
+
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+            String formatted = formatter.format(date);
+
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
+        }
+
+    }
     /**
      * @param args the command line arguments
      */
@@ -152,6 +207,6 @@ public class DataMemberTransferHistory extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable transaction_table;
     // End of variables declaration//GEN-END:variables
 }
