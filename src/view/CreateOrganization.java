@@ -203,9 +203,7 @@ public class CreateOrganization extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        String onlychars = "^\\p{Alpha}+$";
-        String onlynum = "[0-9]+";
-        String phonereg = "((\\+*)((0[ -]+)*|(91 )*)(\\d{12}+|\\d{10}+))|\\d{5}([- ]*)\\d{6}";
+        
         String name = jTextField1.getText();
         String email = jTextField2.getText();
         String phoneNumber = jTextField3.getText();
@@ -216,11 +214,13 @@ public class CreateOrganization extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Enter your name");
         } else if (email.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter your email id");
-        } else if (phoneNumber.equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Enter your phone Number");
-        } else if (!phoneNumber.matches(phonereg)) {
+        }else if (!isValidEmailAddress(email)) {
 
-            JOptionPane.showMessageDialog(rootPane, "Enter the phone number in correct format");
+            JOptionPane.showMessageDialog(rootPane, "Enter a valid email address");
+        }  else if (phoneNumber.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter your phone Number");
+        } else if (!isValidPhone(phoneNumber)) {
+            JOptionPane.showMessageDialog(rootPane, "Enter phone number in correct format");
         } else if (password.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter your password");
         } else if (place.equals("")) {
@@ -238,6 +238,12 @@ public class CreateOrganization extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
@@ -269,6 +275,18 @@ public class CreateOrganization extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+     private boolean isValidPhone(String phone) {
+        boolean validPhone = true;
+        try {
+            Long.parseLong(phone);
+            if (phone.length() != 10) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return validPhone;
+    }
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
