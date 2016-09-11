@@ -8,10 +8,15 @@ package view;
 import Db.Dbcon;
 import General.Configuration;
 import java.awt.Component;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
@@ -127,18 +132,47 @@ public class ChooseFile extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void encryptFile(File file) {
+        try {
+
+            FileInputStream dataInFile = new FileInputStream(file);
+            byte fileData[] = new byte[(int) file.length()];
+            dataInFile.read(fileData);
+            dataInFile.close();
+
+            String fileDataString = encodeData(fileData);
+            System.out.println(fileDataString);
+
+            Writer out = new BufferedWriter(new FileWriter(file));
+            out.write(fileDataString);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String encodeData(byte[] imagebytearray) {
+        return Base64.encode(imagebytearray);
+    }
+
+    public static byte[] decodeData(String idatastring) {
+        return Base64.decode(idatastring);
+    }
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String filename = jLabel2.getText();
         if (filename.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Choose file");
         } else {
-
+            // selectedFilePath
+            encryptFile(new File(Configuration.dataCloud + selectedFilePath));
             Dbcon dbcon = new Dbcon();
             int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id,attr_1 ,attr_2,attr_3,attr_4,created_at)values('" + selectedFilePath + "','" + DataMemberLogin.logged_in_user_id + "','" + attr_1_file_name + "','" + attr_2_file_size + "','" + attr_3_file_extension + "','" + attr_4_file_created_time + "','" + System.currentTimeMillis() + "')");
             if (ins > 0) {
                 this.dispose();
-                UploadFile uploadFile = new UploadFile();
+                UploadFile uploadFile = new UploadFile(attr_1_file_name, attr_2_file_size, attr_3_file_extension, attr_4_file_created_time);
                 uploadFile.setVisible(true);
             }
         }
