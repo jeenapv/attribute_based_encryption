@@ -26,6 +26,7 @@ public class Configuration {
     public static String organisationImages = "organisationImages/";
     public static String sendPasswordSubject = "Attribute based encryption - forgot password ";
     public static String temporaryFilePath = "temporaryFilePath/";
+    public static String allKeys = "allKeys/";
 
     public static void setIconOnLabel(String fileString, JLabel label) {
         // convert string file path to image icona and set on this label
@@ -88,6 +89,10 @@ public class Configuration {
                 f_temporaryFilePath.mkdir();
             }
 
+            File f_allKeys = new File(allKeys);
+            if (!f_allKeys.exists()) {
+                f_allKeys.mkdir();
+            }
 
 
         } catch (Exception e) {

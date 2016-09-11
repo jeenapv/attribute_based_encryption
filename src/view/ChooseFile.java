@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Random;
 
 /**
  *
@@ -36,6 +37,11 @@ public class ChooseFile extends javax.swing.JFrame {
     String attr_2_file_size;
     String attr_3_file_extension;
     String attr_4_file_created_time;
+    static double rangeMax = 999999999;
+    static double rangeMin = 1111;
+    static String secretKeyName = "";
+    static String masterKeyName = "";
+    static String privateKeyName = "";
 
     /**
      * Creates new form ChooseFile
@@ -140,6 +146,25 @@ public class ChooseFile extends javax.swing.JFrame {
             dataInFile.read(fileData);
             dataInFile.close();
 
+            int G = (int) generateCyclicRandomNumber();
+            int G1 = (int) generateCyclicRandomNumber();
+            int e = getAttributeCoefficient(attr_1_file_name);
+            int g = getAttributeCoefficient(attr_2_file_size);
+            int u = getAttributeCoefficient(attr_3_file_extension);
+            int v = getAttributeCoefficient(attr_4_file_created_time);
+            System.out.println(e);
+            System.out.println(g);
+            System.out.println(u);
+            System.out.println(v);
+            String privateKeyPath = "";
+            String masterKeyPath = "";
+            String secretKeyPath = "";
+            int privateKey = generatePrivateKey(e, g, u, v);
+            System.out.println("privateKey " + privateKey);
+            int masterKey = generateMasterKey();
+            System.out.println("masterKey " + masterKey);
+            int secretKey = generateSecretKey(masterKey, privateKey);
+
             String fileDataString = encodeData(fileData);
             System.out.println(fileDataString);
 
@@ -150,6 +175,74 @@ public class ChooseFile extends javax.swing.JFrame {
             e.printStackTrace();
         }
 
+    }
+
+    private static int generateSecretKey(int a, int b) {
+        int c = a - b;
+        if (c < 0) {
+            c = c * -1;
+        }
+        try {
+            File secretKeyFile = new File(Configuration.allKeys + "secret_" + System.currentTimeMillis() + ".key");
+            secretKeyName = secretKeyFile.getName();
+            Writer out = new BufferedWriter(new FileWriter(secretKeyFile));
+            out.write(c + "");
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    private static int generateMasterKey() {
+        int masterKey = 1;
+        Random r = new Random();
+        masterKey = r.nextInt();
+
+        if (masterKey < 0) {
+            masterKey = masterKey * -1;
+        }
+        try {
+            File masterKeyFile = new File(Configuration.allKeys + "master_" + System.currentTimeMillis() + ".key");
+            masterKeyName = masterKeyFile.getName();
+            Writer out = new BufferedWriter(new FileWriter(masterKeyFile));
+            out.write(masterKey + "");
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return masterKey;
+    }
+
+    private static int generatePrivateKey(int e, int g, int u, int v) {
+        int privateKey = ((e + g) * u) / v;
+        File privateKeyFile = new File(Configuration.allKeys + "private_" + System.currentTimeMillis() + ".key");
+        privateKeyName = privateKeyFile.getName();
+        try {
+            Writer out = new BufferedWriter(new FileWriter(privateKeyFile));
+            out.write(privateKey + "");
+            out.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return privateKey;
+    }
+
+    private static double generateCyclicRandomNumber() {
+        Random r = new Random();
+        double randomValue = rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+        return randomValue;
+    }
+
+    private static int getAttributeCoefficient(String attribute) {
+        int attributeCoefficient = 0;
+        for (int i = 0; i < attribute.length(); i++) {
+            char character = attribute.charAt(0);
+            int coefficient = (int) character;
+            attributeCoefficient += coefficient;
+        }
+
+        return attributeCoefficient;
     }
 
     public static String encodeData(byte[] imagebytearray) {
@@ -169,10 +262,10 @@ public class ChooseFile extends javax.swing.JFrame {
             // selectedFilePath
             encryptFile(new File(Configuration.dataCloud + selectedFilePath));
             Dbcon dbcon = new Dbcon();
-            int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id,attr_1 ,attr_2,attr_3,attr_4,created_at)values('" + selectedFilePath + "','" + DataMemberLogin.logged_in_user_id + "','" + attr_1_file_name + "','" + attr_2_file_size + "','" + attr_3_file_extension + "','" + attr_4_file_created_time + "','" + System.currentTimeMillis() + "')");
+            int ins = dbcon.insert("insert into tbl_file_encryption_logs(encrypted_file_path,data_member_id,attr_1 ,attr_2,attr_3,attr_4,created_at,master_key,secret_key,private_key)values('" + selectedFilePath + "','" + DataMemberLogin.logged_in_user_id + "','" + attr_1_file_name + "','" + attr_2_file_size + "','" + attr_3_file_extension + "','" + attr_4_file_created_time + "','" + System.currentTimeMillis() + "', '" + masterKeyName + "' , '" + secretKeyName + "' , '" + privateKeyName + "' )");
             if (ins > 0) {
                 this.dispose();
-                UploadFile uploadFile = new UploadFile(attr_1_file_name, attr_2_file_size, attr_3_file_extension, attr_4_file_created_time);
+                UploadFile uploadFile = new UploadFile(attr_1_file_name, attr_2_file_size, attr_3_file_extension, attr_4_file_created_time, privateKeyName, masterKeyName, secretKeyName);
                 uploadFile.setVisible(true);
             }
         }

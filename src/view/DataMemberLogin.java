@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author Jithinpv
  */
 public class DataMemberLogin extends javax.swing.JFrame {
-
+    
     public static int logged_in_user_id = 1;
 
     /**
@@ -23,7 +23,7 @@ public class DataMemberLogin extends javax.swing.JFrame {
     public DataMemberLogin() {
         initComponents();
         this.setLocationRelativeTo(null);
-
+        
     }
 
     /**
@@ -125,7 +125,7 @@ public class DataMemberLogin extends javax.swing.JFrame {
                     String id = r.getString(1);
                     logged_in_user_id = Integer.parseInt(id);
                     this.dispose();
-                    DataMemberHome dataMemberHome = new DataMemberHome();
+                    DataMemberHome dataMemberHome = new DataMemberHome(r.getString("name"));
                     dataMemberHome.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "invalid");
@@ -135,7 +135,7 @@ public class DataMemberLogin extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -172,7 +172,7 @@ public class DataMemberLogin extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-
+            
             public void run() {
                 new DataMemberLogin().setVisible(true);
             }

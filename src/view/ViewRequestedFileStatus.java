@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import java.io.FileOutputStream;
 
 /**
  *
@@ -191,6 +193,12 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
 
     class ProgressBarThread extends Thread {
 
+        String requested_file_status;
+
+        private ProgressBarThread(String requested_file_status) {
+            this.requested_file_status = requested_file_status;
+        }
+
         public void run() {
             int value = 0;
             try {
@@ -201,7 +209,12 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            downloadSelectedFileWithoutDecryption();
+            if (requested_file_status.trim().toLowerCase().equals("approved")) {
+                downloadSelectedFileWithDecryption();
+            } else {
+                downloadSelectedFileWithoutDecryption();
+            }
+
         }
     }
 
@@ -227,9 +240,43 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
         download_button.setEnabled(false);
     }
 
+    private void downloadSelectedFileWithDecryption() {
+        String requestedFilePath = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 6).toString();
+        String requestedFileName = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 1).toString();
+        System.out.println(requestedFilePath);
+        File fromFile = new File(Configuration.dataCloud + requestedFilePath);
+        try {
+            String readFileToString = FileUtils.readFileToString(fromFile);
+            byte[] dataByteArray = decodeData(readFileToString);
+            
+            File temporaryFileDirectory = new File(Configuration.temporaryFilePath + System.currentTimeMillis());
+            if (temporaryFileDirectory.mkdir()) {
+                FileOutputStream dataOutFile = new FileOutputStream(temporaryFileDirectory.getPath() + "/" + requestedFileName + "." + FilenameUtils.getExtension(requestedFilePath));
+                dataOutFile.write(dataByteArray);
+                dataOutFile.close();
+                try {
+                    Desktop desktop = Desktop.getDesktop();
+                    desktop.open(temporaryFileDirectory);
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(rootPane, "Could not open the file. Please check directory " + temporaryFileDirectory);
+                }
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Could not get file permission in computer to make new folder at " + temporaryFileDirectory);
+            }
+            download_button.setEnabled(false);
+        } catch (Exception ee) {
+            ee.printStackTrace();
+        }
+    }
+
+    public static byte[] decodeData(String idatastring) {
+        return Base64.decode(idatastring);
+    }
+    
 private void download_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_download_buttonActionPerformed
     // TODO add your handling code here:
-    new ProgressBarThread().start();
+    String requested_file_status = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 5).toString();
+    new ProgressBarThread(requested_file_status).start();
 }//GEN-LAST:event_download_buttonActionPerformed
 
 private void requested_files_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_requested_files_tableMouseClicked

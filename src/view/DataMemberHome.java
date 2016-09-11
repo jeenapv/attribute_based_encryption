@@ -25,6 +25,16 @@ public class DataMemberHome extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         loadFileRequests();
+        setTitle(title);
+    }
+    private static String title = "";
+
+    public DataMemberHome(String userName) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        loadFileRequests();
+        title = userName + " - Home";
+        setTitle(title);
     }
 
     private void loadFileRequests() {
@@ -337,7 +347,7 @@ public class DataMemberHome extends javax.swing.JFrame {
         String request_id = request_table.getValueAt(request_table.getSelectedRow(), 0).toString();
         String status = request_table.getValueAt(request_table.getSelectedRow(), 6).toString();
         String is_inter_company_file_request = request_table.getValueAt(request_table.getSelectedRow(), 7).toString();
-
+        System.out.println("is_inter_company_file_request  " + is_inter_company_file_request);
         if (is_inter_company_file_request.equals("0")) {
             // iside company request
             if (status.toLowerCase().equals("approved") || status.toLowerCase().equals("rejected")) {
@@ -354,6 +364,7 @@ public class DataMemberHome extends javax.swing.JFrame {
             }
         } else {
             // outside company request
+            JOptionPane.showMessageDialog(rootPane, "Different company");
         }
 
 
