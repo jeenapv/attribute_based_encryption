@@ -1,3 +1,22 @@
 data member home, check fundtion : loadFileRequests()
 Complete it
 
+
+to do...
+	
+
+	
+
+	
+	Display requests in View approval request page.(admin side approval).
+
+	Display transfer history(organisation history,admin history).
+
+
+
+completed...
+	Browse button must be  enabled only after clicking edit button(manage organisation).
+
+	All button except home button must be enabled only after selecting one organisation from table(manage organisation,manage data member).
+
+	Public key is not displayed while clicking one file from encryption history table(encryption history).[private key is displayed instead of public key].
