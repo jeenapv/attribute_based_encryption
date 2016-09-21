@@ -9,6 +9,8 @@ import Db.Dbcon;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -396,6 +398,10 @@ private void request_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIR
     file_size_text.setText(request_table.getValueAt(request_table.getSelectedRow(), 9).toString());
     file_type_text.setText(request_table.getValueAt(request_table.getSelectedRow(), 10).toString());
     priority_text.setText(request_table.getValueAt(request_table.getSelectedRow(), 11).toString());
+    file_name_text.setEditable(false);
+    file_size_text.setEditable(false);
+    file_type_text.setEditable(false);
+    priority_text.setEditable(false);
     // TODO add your handling code here:
 }//GEN-LAST:event_request_tableMouseClicked
 

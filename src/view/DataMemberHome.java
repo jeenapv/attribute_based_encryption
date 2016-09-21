@@ -73,10 +73,10 @@ public class DataMemberHome extends javax.swing.JFrame {
                     + " WHERE "
                     + " filereq.requested_data_member = datam.data_member_id AND"
                     + " org.organisation_id = datam.organization_id AND"
-                    + " encrptlog.encryption_id = filereq.encryption_id AND"
+                    + " encrptlog.encryption_id = filereq.encryption_id AND status!=1 and"
                     + " filereq.file_owner_data_member =" + DataMemberLogin.logged_in_user_id;
             ResultSet rs = dbcon.select(str);
-
+            System.out.println(str);
             String arr[] = new String[10];
             while (rs.next()) {
                 String request_id = rs.getString("request_id");

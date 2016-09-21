@@ -6,17 +6,25 @@ to do...
 	
 
 	
-
 	
-	Display requests in View approval request page.(admin side approval).
+	
+	Admin rejected requests should not be displayed in view approval request page.(admin side)
 
-	Display transfer history(organisation history,admin history).
 
 
 
 completed...
+
 	Browse button must be  enabled only after clicking edit button(manage organisation).
 
-	All button except home button must be enabled only after selecting one organisation from table(manage organisation,manage data member).
+	Public key is not displayed when clicked one of the file from encryption history table(encryption history).[private key is displayed instead of public key].
+	
+	Display requests in View approval request page.(admin side approval).
 
-	Public key is not displayed while clicking one file from encryption history table(encryption history).[private key is displayed instead of public key].
+	Display transfer history(admin history).
+
+	Check query in intraorganizationHistory function()(organisation history)
+
+	Approved requests should not be shown in home page(datamember home).
+	
+	File details displayed in request approval page(admin) are not editable.

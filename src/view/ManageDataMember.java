@@ -267,6 +267,10 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+        jButton3.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton4.setEnabled(false);
+        jButton5.setEnabled(false);
         Dbcon dbcon = new Dbcon();
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
         ResultSet rs = dbcon.select("select * from tbl_data_member where organization_id=" + OrganizationLogin.logged_in_org_id);
@@ -282,6 +286,7 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        jButton3.setEnabled(true);
         jTextField1.setEditable(true);
         jTextField2.setEditable(true);
         jTextField3.setEditable(true);
@@ -307,6 +312,9 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+        jButton2.setEnabled(true);
+        jButton4.setEnabled(true);
+        jButton5.setEnabled(true);
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_data_member where data_member_id='" + id + "'");

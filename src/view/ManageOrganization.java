@@ -317,10 +317,16 @@ public class ManageOrganization extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+        jButton6.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
+        jButton1.setEnabled(false);
     }//GEN-LAST:event_formWindowOpened
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
+         jButton3.setEnabled(true);
+        jButton1.setEnabled(true);
         disableAll();
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
@@ -363,12 +369,13 @@ public class ManageOrganization extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
+        jButton6.setEnabled(true);
         user_name_text.setEditable(true);
         email_text.setEditable(true);
         phone_text.setEditable(true);
         password_text.setEditable(true);
         place_text.setEditable(true);
+        jButton2.setEnabled(true);
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

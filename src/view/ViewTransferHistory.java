@@ -3,8 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import Db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,6 +26,7 @@ public class ViewTransferHistory extends javax.swing.JFrame {
     public ViewTransferHistory() {
         initComponents();
         this.setLocationRelativeTo(null);
+        viewTransferHistory();
     }
 
     /**
@@ -33,17 +42,17 @@ public class ViewTransferHistory extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        sender_org = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        receiver_org = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        name = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        size = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        type = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        priorityy = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,6 +67,11 @@ public class ViewTransferHistory extends javax.swing.JFrame {
                 "ID", "SENDER", "RECEIVER", "FILE", "DATE", "STATUS"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel2.setText("Sender Organization");
@@ -103,13 +117,13 @@ public class ViewTransferHistory extends javax.swing.JFrame {
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(35, 35, 35)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(priorityy, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField2)
-                                .addComponent(jTextField1)
-                                .addComponent(jTextField3)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(receiver_org)
+                                .addComponent(sender_org)
+                                .addComponent(name)
+                                .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(177, 177, 177)
                         .addComponent(jButton1)))
@@ -127,27 +141,27 @@ public class ViewTransferHistory extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sender_org, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(receiver_org, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(priorityy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(40, 40, 40))
         );
 
@@ -156,10 +170,101 @@ public class ViewTransferHistory extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        AdminHome adminHome=new AdminHome();
+        this.dispose();
+        AdminHome adminHome = new AdminHome();
         adminHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        String reqid = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String qury = "SELECT  filereq.request_id,filereq.request_priority, filereq.requested_data_member ,datam.name AS dataMemName, org.name AS org_name, encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName, org2.name AS dataOwnweOrg FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.request_id='" + reqid + "'";
+        System.out.println(qury);
+        ResultSet rs = dbcon.select(qury);
+        try {
+            if (rs.next()) {
+                String fileName = rs.getString("attr_1");
+                String fileSize = rs.getString("attr_2");
+                String fileType = rs.getString("attr_3");
+                String senderOrg = rs.getString("dataOwnweOrg");
+                String receiverOrg = rs.getString("org_name");
+                String priority = rs.getString("request_priority");
+                if (priority.equals("1")) {
+                    priority = "low";
+                } else if (priority.equals("2")) {
+                    priority = "medium";
+                } else {
+                    priority = "high";
+                }
+                sender_org.setText(senderOrg);
+                receiver_org.setText(receiverOrg);
+                name.setText(fileName);
+                size.setText(fileSize);
+                type.setText(fileType);
+                priorityy.setText(priority);
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jTable1MouseClicked
+    private void viewTransferHistory() {
+       
+        Dbcon dbcon = new Dbcon();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        String arr[] = new String[7];
+        String query = "SELECT filereq.request_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,datam.name AS dataMemName, org.name AS org_name, encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName, org2.name AS dataOwnweOrg FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id";
+        ResultSet rs = dbcon.select(query);
+        try {
+            while (rs.next()) {
+                
+                String reqId = rs.getString("request_id");
+                String receiver = rs.getString("dataMemName");
+                String sender = rs.getString("dataOwnerName");
+                String file = rs.getString("attr_1");
+                String date = rs.getString("requested_date");
+                String status = rs.getString("status");
+                if (status.equals("0")) {
+                    status = "rejected";
+                } else if (status.equals("1")) {
+                    status = "approved";
+                } else {
+                    status = "pending";
+                }
+                arr[0] = reqId;
+                arr[2] = sender;
+                arr[1] = receiver;
+                arr[3] = getFormatedDate(date, "dd MM yyyy");
+                arr[4] = status;
+                arr[5] = file;
+                //arr[6] = encId;
+                model.addRow(arr);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getFormatedDate(String dateString, String format) {
+
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+            String formatted = formatter.format(date);
+
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
+        }
+
+    }
+    
 
     /**
      * @param args the command line arguments
@@ -207,11 +312,11 @@ public class ViewTransferHistory extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField name;
+    private javax.swing.JTextField priorityy;
+    private javax.swing.JTextField receiver_org;
+    private javax.swing.JTextField sender_org;
+    private javax.swing.JTextField size;
+    private javax.swing.JTextField type;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,8 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
+
+import Db.Dbcon;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,6 +26,8 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
     public OrganizationTransferHistory() {
         initComponents();
         this.setLocationRelativeTo(null);
+        intraOrganisationHistory();
+
     }
 
     /**
@@ -39,17 +49,17 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        sen_org = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        rec_org = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        file_name = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        file_size = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        file_type = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        priorityy = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
@@ -58,23 +68,39 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jTabbedPane4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane4MouseClicked(evt);
+            }
+        });
+
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "SENDER", "RECEIVER", "DATE", "STATUS", "FILE"
+                "ID", "SENDER", "RECEIVER", "DATE", "STATUS", "FILE", "enc_id"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(6).setMinWidth(0);
+            jTable1.getColumnModel().getColumn(6).setPreferredWidth(0);
+            jTable1.getColumnModel().getColumn(6).setMaxWidth(0);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -100,14 +126,14 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "SENDER", "RECEIVER", "FILE", "DATE", "STATUS"
+                "ID", "SENDER", "RECEIVER", "FILE", "DATE", "STATUS", "enc_id"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -118,6 +144,11 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
         if (jTable2.getColumnModel().getColumnCount() > 0) {
             jTable2.getColumnModel().getColumn(0).setResizable(false);
@@ -126,6 +157,9 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
             jTable2.getColumnModel().getColumn(3).setResizable(false);
             jTable2.getColumnModel().getColumn(4).setResizable(false);
             jTable2.getColumnModel().getColumn(5).setResizable(false);
+            jTable2.getColumnModel().getColumn(6).setMinWidth(0);
+            jTable2.getColumnModel().getColumn(6).setPreferredWidth(0);
+            jTable2.getColumnModel().getColumn(6).setMaxWidth(0);
         }
 
         jLabel1.setText("Sender Organization");
@@ -147,11 +181,11 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(rec_org, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(sen_org, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -162,11 +196,11 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sen_org, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rec_org, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -203,21 +237,21 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(38, 38, 38)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(file_size, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(38, 38, 38)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(file_name, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(38, 38, 38)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(file_type, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(38, 38, 38)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField6, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))))))
+                                    .addComponent(priorityy, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))))))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -228,19 +262,19 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_size, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(priorityy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addContainerGap(57, Short.MAX_VALUE))
@@ -252,9 +286,186 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        OrganizationHome organizationHome=new OrganizationHome();
+        OrganizationHome organizationHome = new OrganizationHome();
         organizationHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 6).toString();
+        String reqid = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        ResultSet r = dbcon.select("select request_priority from tbl_file_request where request_id='" + reqid + "'");
+        try {
+            if (r.next()) {
+                String priority = r.getString("request_priority");
+                if (priority.equals("1")) {
+                    priority = "low";
+                } else if (priority.equals("2")) {
+                    priority = "medium";
+                } else {
+                    priority = "high";
+                }
+                priorityy.setText(priority);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
+        try {
+            while (rs.next()) {
+                String filename = rs.getString("attr_1");
+                String size = rs.getString("attr_2");
+                String type = rs.getString("attr_3");
+
+                file_name.setText(filename);
+                file_size.setText(size);
+                file_type.setText(type);
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jTabbedPane4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane4MouseClicked
+        // TODO add your handling code here:
+        interOrganisationHistory();
+    }//GEN-LAST:event_jTabbedPane4MouseClicked
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        // TODO add your handling code here:
+        Dbcon dbcon = new Dbcon();
+
+        String reqid = jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString();
+        String qry = "SELECT  filereq.request_id,filereq.request_priority, filereq.requested_data_member ,datam.name AS dataMemName, org.name AS org_name, encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName, org2.name AS dataOwnweOrg FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.request_id='" + reqid + "'";
+        ResultSet r = dbcon.select(qry);
+        try {
+            if (r.next()) {
+                String fileName = r.getString("attr_1");
+                String fileSize = r.getString("attr_2");
+                String fileType = r.getString("attr_3");
+                String senderOrg = r.getString("dataOwnweOrg");
+                String receiverOrg = r.getString("org_name");
+                String priority = r.getString("request_priority");
+                if (priority.equals("1")) {
+                    priority = "low";
+                } else if (priority.equals("2")) {
+                    priority = "medium";
+                } else {
+                    priority = "high";
+                }
+                priorityy.setText(priority);
+                file_name.setText(fileName);
+                file_size.setText(fileSize);
+                file_type.setText(fileType);
+                sen_org.setText(senderOrg);
+                rec_org.setText(receiverOrg);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jTable2MouseClicked
+    private String getFormatedDate(String dateString, String format) {
+
+        try {
+            long dateMilli = Long.parseLong(dateString);
+            Date date = new Date(dateMilli);
+            SimpleDateFormat formatter = new SimpleDateFormat(format);
+
+            String formatted = formatter.format(date);
+
+            System.out.println("formatted " + formatted);
+            return formatted;
+        } catch (Exception e) {
+            return "date not found";
+        }
+
+    }
+
+    private void intraOrganisationHistory() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        Dbcon dbcon = new Dbcon();
+        String query = "SELECT filereq.request_id,filereq.encryption_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,datam.name AS dataMemName,  encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.is_inter_company_file_request=0 AND datam.organization_id='" + OrganizationLogin.logged_in_org_id + "' and datam2.organization_id='" + OrganizationLogin.logged_in_org_id + "'";
+        ResultSet rs = dbcon.select(query);
+        try {
+            String arr[] = new String[7];
+            while (rs.next()) {
+                String encId = rs.getString("encryption_id");
+                String reqName = rs.getString("dataMemName");
+                String owner = rs.getString("dataOwnerName");
+                String requestId = rs.getString("request_id");
+                String status = rs.getString("status");
+                String date = rs.getString("requested_date");
+                String priority = rs.getString("request_priority");
+                String file_name = rs.getString("attr_1");
+                String size = rs.getString("attr_2");
+                String type = rs.getString("attr_3");
+                if (status.equals("0")) {
+                    status = "rejected";
+                } else if (status.equals("1")) {
+                    status = "approved";
+                } else {
+                    status = "pending";
+                }
+                arr[0] = requestId;
+                arr[1] = reqName;
+                arr[2] = owner;
+                arr[3] = getFormatedDate(date, "dd MM yyyy");
+                arr[4] = status;
+                arr[5] = file_name;
+                arr[6] = encId;
+                model.addRow(arr);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
+    private void interOrganisationHistory() {
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        Dbcon dbcon = new Dbcon();
+
+        String query = "SELECT filereq.request_id,filereq.encryption_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,datam.name AS dataMemName, org.name AS org_name, encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName, org2.name AS dataOwnweOrg FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.is_inter_company_file_request=1 AND (datam.organization_id='" + OrganizationLogin.logged_in_org_id + "' or datam2.organization_id='" + OrganizationLogin.logged_in_org_id + "')";
+        System.out.println(query);
+        ResultSet rs = dbcon.select(query);
+        try {
+            String arr[] = new String[7];
+            while (rs.next()) {
+                String encId = rs.getString("encryption_id");
+                String reqName = rs.getString("dataMemName");
+                String owner = rs.getString("dataOwnerName");
+                String requestId = rs.getString("request_id");
+                String status = rs.getString("status");
+                String date = rs.getString("requested_date");
+                String priority = rs.getString("request_priority");
+                String file_name = rs.getString("attr_1");
+                String size = rs.getString("attr_2");
+                String type = rs.getString("attr_3");
+                if (status.equals("0")) {
+                    status = "rejected";
+                } else if (status.equals("1")) {
+                    status = "approved";
+                } else {
+                    status = "pending";
+                }
+                arr[0] = requestId;
+                arr[1] = reqName;
+                arr[2] = owner;
+                arr[4] = getFormatedDate(date, "dd MM yyyy");
+                arr[5] = status;
+                arr[3] = file_name;
+                arr[6] = encId;
+                model.addRow(arr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -292,6 +503,9 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField file_name;
+    private javax.swing.JTextField file_size;
+    private javax.swing.JTextField file_type;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -308,11 +522,8 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField priorityy;
+    private javax.swing.JTextField rec_org;
+    private javax.swing.JTextField sen_org;
     // End of variables declaration//GEN-END:variables
 }

@@ -134,11 +134,13 @@ public class EncryptionHistory extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(history_table);
-        history_table.getColumnModel().getColumn(0).setMinWidth(50);
-        history_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        history_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (history_table.getColumnModel().getColumnCount() > 0) {
+            history_table.getColumnModel().getColumn(0).setMinWidth(50);
+            history_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            history_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        }
 
-        jLabel2.setText("Public Key");
+        jLabel2.setText("Private Key");
 
         jLabel3.setText("Master Key");
 
@@ -158,13 +160,13 @@ public class EncryptionHistory extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(243, 243, 243)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(243, 243, 243)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(122, 122, 122)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +186,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(224, 224, 224)
                                 .addComponent(jButton1)))
-                        .addGap(0, 204, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -233,12 +235,15 @@ public class EncryptionHistory extends javax.swing.JFrame {
         ResultSet rs = dbcon.select("select * from tbl_file_encryption_logs where encryption_id='" + id + "'");
         try {
             if (rs.next()) {
-                String pubicKey = rs.getString(3);
-                jTextField1.setText(pubicKey);
+               // String pubicKey = rs.getString(3);
+               // jTextField1.setText(pubicKey);
                 String masterKey = rs.getString(8);
                 jTextField2.setText(masterKey);
                 String secretKey = rs.getString(9);
                 jTextField3.setText(secretKey);
+                String privateKey=rs.getString("private_key");
+                jTextField1.setText(privateKey);
+                
             }
         } catch (SQLException ex) {
         }
