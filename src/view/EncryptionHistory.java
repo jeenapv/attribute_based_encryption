@@ -36,7 +36,7 @@ public class EncryptionHistory extends javax.swing.JFrame {
         try {
             String arr[] = new String[10];
             while (rs.next()) {
-                String date1 = rs.getString(11);
+                String date1 = rs.getString("created_at");
                 long date2 = Long.parseLong(date1);
                 String date3 = new Date(date2).toString();
 
@@ -134,15 +134,19 @@ public class EncryptionHistory extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(history_table);
-        if (history_table.getColumnModel().getColumnCount() > 0) {
-            history_table.getColumnModel().getColumn(0).setMinWidth(50);
-            history_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-            history_table.getColumnModel().getColumn(0).setMaxWidth(50);
-        }
+        history_table.getColumnModel().getColumn(0).setMinWidth(50);
+        history_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        history_table.getColumnModel().getColumn(0).setMaxWidth(50);
 
         jLabel2.setText("Private Key");
 
+        jTextField1.setEditable(false);
+
+        jTextField2.setEditable(false);
+
         jLabel3.setText("Master Key");
+
+        jTextField3.setEditable(false);
 
         jLabel4.setText("Secret Key");
 
@@ -173,20 +177,20 @@ public class EncryptionHistory extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(64, 64, 64)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(64, 64, 64)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(64, 64, 64)
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(224, 224, 224)
                                 .addComponent(jButton1)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 149, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -237,9 +241,9 @@ public class EncryptionHistory extends javax.swing.JFrame {
             if (rs.next()) {
                // String pubicKey = rs.getString(3);
                // jTextField1.setText(pubicKey);
-                String masterKey = rs.getString(8);
+                String masterKey = rs.getString("master_key");
                 jTextField2.setText(masterKey);
-                String secretKey = rs.getString(9);
+                String secretKey = rs.getString("secret_key");
                 jTextField3.setText(secretKey);
                 String privateKey=rs.getString("private_key");
                 jTextField1.setText(privateKey);
