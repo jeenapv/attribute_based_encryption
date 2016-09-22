@@ -110,33 +110,39 @@ public class OrganizationLogin extends javax.swing.JFrame {
         // TODO add your handling code here:
         String userName = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
-        if(userName.equals("")){
+        if (userName.equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Enter username");
-        }else if(password.equals("")){
-              JOptionPane.showMessageDialog(rootPane, "Enter password");
-        }else{
-        Dbcon dbcon = new Dbcon();
-        ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
-        try {
-            if (rst.next()) {
-                String id = rst.getString(1);
-                logged_in_org_id = Integer.parseInt(id);
-                this.dispose();
-                OrganizationHome organizationHome = new OrganizationHome();
-                organizationHome.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "invalid");
+        } else if (password.equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Enter password");
+        } else {
+            Dbcon dbcon = new Dbcon();
+            ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
+            try {
+                if (rst.next()) {
+                    String id = rst.getString(1);
+                    logged_in_org_id = Integer.parseInt(id);
+                    String status = rst.getString("org_status");
+                    if (status.equals("1")) {
+                        this.dispose();
+                        OrganizationHome organizationHome = new OrganizationHome();
+                        organizationHome.setVisible(true);
+                    }else{
+                        JOptionPane.showMessageDialog(rootPane, "You are Blocked...");
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "invalid");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         this.dispose();
-        MainLogin mainLogin=new MainLogin();
+        this.dispose();
+        MainLogin mainLogin = new MainLogin();
         mainLogin.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 

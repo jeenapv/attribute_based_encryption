@@ -260,9 +260,16 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
         Dbcon dbcon = new Dbcon();
-        dbcon.update("update tbl_data_member set org_status=0 where data_member_id='" + id + "'");
+        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String status = jButton5.getText();
+        if (status.equals("RECOVER")) {
+            dbcon.update("update tbl_data_member set data_member_status=1 where data_member_id='" + id + "'");
+        } else {
+            dbcon.update("update tbl_data_member set data_member_status=0 where data_member_id='" + id + "'");
+        }
+
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -276,7 +283,13 @@ public class ManageDataMember extends javax.swing.JFrame {
         ResultSet rs = dbcon.select("select * from tbl_data_member where organization_id=" + OrganizationLogin.logged_in_org_id);
         try {
             while (rs.next()) {
-                dt.addRow(new String[]{rs.getString(1), rs.getString(2), rs.getString(10)});
+                String status = rs.getString(10);
+                if (status.equals("1")) {
+                    status = "active";
+                } else {
+                    status = "blocked";
+                }
+                dt.addRow(new String[]{rs.getString(1), rs.getString(2), status});
             }
             jTable1.setModel(dt);
         } catch (SQLException ex) {
@@ -316,6 +329,13 @@ public class ManageDataMember extends javax.swing.JFrame {
         jButton4.setEnabled(true);
         jButton5.setEnabled(true);
         String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+        String status = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+        if (status.equals("active")) {
+            jButton5.setText("DELETE");
+        } else {
+            jButton5.setText("RECOVER");
+        }
+
         Dbcon dbcon = new Dbcon();
         ResultSet rs = dbcon.select("select * from tbl_data_member where data_member_id='" + id + "'");
         String name, email, phone_num, password, place, address, dob;

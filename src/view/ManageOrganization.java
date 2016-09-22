@@ -353,9 +353,9 @@ public class ManageOrganization extends javax.swing.JFrame {
 
                 selectedOrganisationStatus = Integer.parseInt(rs.getString("org_status"));
                 if (selectedOrganisationStatus == 0) {
-                    active_deactive_button.setText("ACTIVATE");
+                    active_deactive_button.setText("RECOVER");
                 } else {
-                    active_deactive_button.setText("DEACTIVATE");
+                    active_deactive_button.setText("DELETE");
                 }
 
             }

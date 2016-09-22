@@ -122,11 +122,19 @@ public class DataMemberLogin extends javax.swing.JFrame {
             ResultSet r = dbcon.select("select * from tbl_data_member where email_id='" + userName + "' and password='" + password + "'");
             try {
                 if (r.next()) {
+                    String status=r.getString("data_member_status");
                     String id = r.getString(1);
                     logged_in_user_id = Integer.parseInt(id);
-                    this.dispose();
+                    if(status.equals("1")){
+                          this.dispose();
                     DataMemberHome dataMemberHome = new DataMemberHome(r.getString("name"));
                     dataMemberHome.setVisible(true);
+                    }else if(status.equals("0")){
+                        JOptionPane.showMessageDialog(rootPane, "You are blocked...");
+                    }else{
+                        
+                    }
+                  
                 } else {
                     JOptionPane.showMessageDialog(rootPane, "invalid");
                 }
