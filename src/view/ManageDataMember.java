@@ -9,6 +9,7 @@ import Db.Dbcon;
 import java.awt.image.BufferedImage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -260,15 +261,33 @@ public class ManageDataMember extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
-        Dbcon dbcon = new Dbcon();
-        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
-        String status = jButton5.getText();
-        if (status.equals("RECOVER")) {
-            dbcon.update("update tbl_data_member set data_member_status=1 where data_member_id='" + id + "'");
-        } else {
-            dbcon.update("update tbl_data_member set data_member_status=0 where data_member_id='" + id + "'");
+        int showConfirmDialog = JOptionPane.showConfirmDialog(rootPane, "Are you sure ?");
+        if (showConfirmDialog == JOptionPane.OK_OPTION) {
+            String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+            String status = jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString();
+            System.out.println(status);
+            Dbcon dbcon = new Dbcon();
+            int nextStatusCode = 0;
+            if (status.toLowerCase().trim().equals("active")) {
+                nextStatusCode = 0;
+                jTable1.setValueAt("blocked", jTable1.getSelectedRow(), 2);
+                jButton5.setText("RECOVER");
+            } else {
+                nextStatusCode = 1;
+                jTable1.setValueAt("active", jTable1.getSelectedRow(), 2);
+                jButton5.setText("DELETE");
+            }
+            dbcon.update("update tbl_data_member set data_member_status=" + nextStatusCode + " where data_member_id='" + id + "'");
         }
 
+//        Dbcon dbcon = new Dbcon();
+//        String id = jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString();
+//        String status = jButton5.getText();
+//        if (status.equals("RECOVER")) {
+//            dbcon.update("update tbl_data_member set data_member_status=1 where data_member_id='" + id + "'");
+//        } else {
+//            dbcon.update("update tbl_data_member set data_member_status=0 where data_member_id='" + id + "'");
+//        }
 
     }//GEN-LAST:event_jButton5ActionPerformed
 

@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 public class OrganizationLogin extends javax.swing.JFrame {
 
     public static int logged_in_org_id = 0;
+    public static String username="";
 
     /**
      * Creates new form OrganizationLogin
@@ -42,6 +43,7 @@ public class OrganizationLogin extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Username");
 
@@ -119,6 +121,7 @@ public class OrganizationLogin extends javax.swing.JFrame {
             ResultSet rst = dbcon.select("select * from tbl_organisation where email_id='" + userName + "' and password='" + password + "'");
             try {
                 if (rst.next()) {
+                    username=rst.getString("name");
                     String id = rst.getString(1);
                     logged_in_org_id = Integer.parseInt(id);
                     String status = rst.getString("org_status");

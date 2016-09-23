@@ -416,11 +416,11 @@ public class ManageOrganization extends javax.swing.JFrame {
             if (status.toLowerCase().trim().equals("active")) {
                 nextStatusCode = 0;
                 jTable1.setValueAt("blocked", jTable1.getSelectedRow(), 2);
-                active_deactive_button.setText("ACTIVATE");
+                active_deactive_button.setText("RECOVER");
             } else {
                 nextStatusCode = 1;
                 jTable1.setValueAt("active", jTable1.getSelectedRow(), 2);
-                active_deactive_button.setText("DEACTIVATE");
+                active_deactive_button.setText("DELETE");
             }
             dbcon.update("update tbl_organisation set org_status=" + nextStatusCode + " where organisation_id='" + id + "'");
         }

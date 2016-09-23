@@ -37,6 +37,7 @@ public class AdminHome extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jButton1.setText("Create Organization");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -66,7 +67,7 @@ public class AdminHome extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("HOME");
+        jLabel1.setText("ADMIN HOME");
 
         jButton5.setText("LOGOUT");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -92,8 +93,8 @@ public class AdminHome extends javax.swing.JFrame {
                             .addComponent(jButton3)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(57, 57, 57)
                         .addComponent(jButton5)))
                 .addGap(24, 24, 24))
         );
