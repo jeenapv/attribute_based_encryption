@@ -85,7 +85,6 @@ public class OrganizationHome extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 240, 40));
 
-        jButton4.setText("LOGOUT");
         jButton4.setToolTipText("LOGOUT");
         jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton4.addActionListener(new java.awt.event.ActionListener() {

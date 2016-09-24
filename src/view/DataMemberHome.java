@@ -33,6 +33,7 @@ public class DataMemberHome extends javax.swing.JFrame {
         setTitle(title);
         loadIcons();
          Configuration.setIconOnLabel("dataMemberHome.jpg", bg1);
+         Configuration.setIconOnButton("ShutDown.png", jButton1);
          
     }
 
@@ -45,6 +46,7 @@ public class DataMemberHome extends javax.swing.JFrame {
         setTitle(title);
         loadIcons();
          Configuration.setIconOnLabel("dataMemberHome.jpg", bg1);
+         Configuration.setIconOnButton("ShutDown.png", jButton1);
           
     }
 
@@ -185,16 +187,16 @@ public class DataMemberHome extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("HOME");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 24, 156, -1));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 30, 60, 20));
 
-        jButton1.setText("LOGOUT");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(566, 20, -1, -1));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 20, 45, 41));
 
         jButton2.setText("View Transfer History");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -294,7 +296,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 refresh_labelMouseClicked(evt);
             }
         });
-        getContentPane().add(refresh_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(485, 11, 45, 41));
+        getContentPane().add(refresh_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 20, 45, 41));
 
         bg1.setText("jLabel2");
         getContentPane().add(bg1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 730, 430));
