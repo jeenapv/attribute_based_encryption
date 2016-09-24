@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package view;
 
 import General.Configuration;
+import General.Nimbus;
 
 /**
  *
@@ -18,13 +18,17 @@ public class OrganizationHome extends javax.swing.JFrame {
      * Creates new form OrganizationHome
      */
     public OrganizationHome() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
-       String name="Welcome "+OrganizationLogin.username;
-       jLabel1.setText(name);
+        String name = "Welcome " + OrganizationLogin.username;
+        jLabel1.setText(name);
         Configuration.setIconOnLabel("blueHome.jpg", bg);
         Configuration.setIconOnButton("add_user.png", jButton1);
-        
+        Configuration.setIconOnButton("manage_user.png", jButton2);
+        Configuration.setIconOnButton("ShutDown.png", jButton4);
+        Configuration.setIconOnButton("transaction.png", jButton3);
+
     }
 
     /**
@@ -48,42 +52,51 @@ public class OrganizationHome extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setText("Add Data Member");
+        jButton1.setToolTipText("ADD DATA MEMBER");
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 60, 60, 60));
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 70, 90, 70));
 
         jButton2.setText("Manage Data Member");
+        jButton2.setToolTipText("MANAGE DATA MEMBER");
+        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 147, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 140, 60));
 
         jButton3.setText("View Transfer History");
+        jButton3.setToolTipText("VIEW TRANSACTION HISTORY");
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(99, 200, 137, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 150, 80));
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(121, 18, 98, 23));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 240, 40));
 
         jButton4.setText("LOGOUT");
+        jButton4.setToolTipText("LOGOUT");
+        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(252, 18, -1, -1));
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 10, 40, 30));
 
         bg.setText("jLabel2");
-        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, 310));
+        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, 230));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -91,28 +104,28 @@ public class OrganizationHome extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        AddDataMember addDataMember=new AddDataMember();
+        AddDataMember addDataMember = new AddDataMember();
         addDataMember.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        ManageDataMember manageDataMember=new ManageDataMember();
+        ManageDataMember manageDataMember = new ManageDataMember();
         manageDataMember.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        OrganizationTransferHistory organizationTransferHistory=new OrganizationTransferHistory();
+        OrganizationTransferHistory organizationTransferHistory = new OrganizationTransferHistory();
         organizationTransferHistory.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         this.dispose();
-        MainLogin mainlogin=new MainLogin();
+        MainLogin mainlogin = new MainLogin();
         mainlogin.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 

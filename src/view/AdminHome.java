@@ -6,6 +6,8 @@
 
 package view;
 
+import General.Nimbus;
+
 /**
  *
  * @author Jithinpv
@@ -16,6 +18,7 @@ public class AdminHome extends javax.swing.JFrame {
      * Creates new form AdimnHome
      */
     public AdminHome() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
     }

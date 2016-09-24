@@ -7,6 +7,7 @@ package view;
 
 import Db.Dbcon;
 import General.Configuration;
+import General.Nimbus;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,24 +26,31 @@ public class DataMemberHome extends javax.swing.JFrame {
      * Creates new form DataMemberHome
      */
     public DataMemberHome() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadFileRequests();
         setTitle(title);
         loadIcons();
+         Configuration.setIconOnLabel("dataMemberHome.jpg", bg1);
+         
     }
 
     public DataMemberHome(String userName) {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadFileRequests();
         title = userName + " - Home";
         setTitle(title);
         loadIcons();
+         Configuration.setIconOnLabel("dataMemberHome.jpg", bg1);
+          
     }
 
     private void loadIcons() {
         Configuration.setIconOnLabel("refresh.png", refresh_label);
+       
     }
 
     private void clearTable() throws Exception {
@@ -152,6 +160,7 @@ public class DataMemberHome extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bg = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -164,6 +173,9 @@ public class DataMemberHome extends javax.swing.JFrame {
         approve_button = new javax.swing.JButton();
         reject_button = new javax.swing.JButton();
         refresh_label = new javax.swing.JLabel();
+        bg1 = new javax.swing.JLabel();
+
+        bg.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -171,8 +183,10 @@ public class DataMemberHome extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("HOME");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 24, 156, -1));
 
         jButton1.setText("LOGOUT");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -180,6 +194,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(566, 20, -1, -1));
 
         jButton2.setText("View Transfer History");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -187,6 +202,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 87, -1, -1));
 
         jButton3.setText("View All Files");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -194,6 +210,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(163, 87, -1, -1));
 
         jButton4.setText("View Requested File Status");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -201,6 +218,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(262, 87, -1, -1));
 
         jButton5.setText("Create file& Upload");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -208,6 +226,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(431, 87, -1, -1));
 
         jButton6.setText("Encryption History");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -215,6 +234,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 jButton6ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(566, 87, -1, -1));
 
         request_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -238,14 +258,18 @@ public class DataMemberHome extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(request_table);
-        request_table.getColumnModel().getColumn(0).setMinWidth(50);
-        request_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        request_table.getColumnModel().getColumn(0).setMaxWidth(50);
-        request_table.getColumnModel().getColumn(4).setResizable(false);
-        request_table.getColumnModel().getColumn(6).setResizable(false);
-        request_table.getColumnModel().getColumn(7).setMinWidth(0);
-        request_table.getColumnModel().getColumn(7).setPreferredWidth(0);
-        request_table.getColumnModel().getColumn(7).setMaxWidth(0);
+        if (request_table.getColumnModel().getColumnCount() > 0) {
+            request_table.getColumnModel().getColumn(0).setMinWidth(50);
+            request_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            request_table.getColumnModel().getColumn(0).setMaxWidth(50);
+            request_table.getColumnModel().getColumn(4).setResizable(false);
+            request_table.getColumnModel().getColumn(6).setResizable(false);
+            request_table.getColumnModel().getColumn(7).setMinWidth(0);
+            request_table.getColumnModel().getColumn(7).setPreferredWidth(0);
+            request_table.getColumnModel().getColumn(7).setMaxWidth(0);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, 660, 180));
 
         approve_button.setText("APPROVE");
         approve_button.addActionListener(new java.awt.event.ActionListener() {
@@ -253,6 +277,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 approve_buttonActionPerformed(evt);
             }
         });
+        getContentPane().add(approve_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 330, -1, -1));
 
         reject_button.setText("REJECT");
         reject_button.addActionListener(new java.awt.event.ActionListener() {
@@ -260,6 +285,7 @@ public class DataMemberHome extends javax.swing.JFrame {
                 reject_buttonActionPerformed(evt);
             }
         });
+        getContentPane().add(reject_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 330, -1, -1));
 
         refresh_label.setText(" ");
         refresh_label.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -268,68 +294,10 @@ public class DataMemberHome extends javax.swing.JFrame {
                 refresh_labelMouseClicked(evt);
             }
         });
+        getContentPane().add(refresh_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(485, 11, 45, 41));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(32, 32, 32)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(refresh_label, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addComponent(jButton6))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(260, 260, 260)
-                        .addComponent(approve_button)
-                        .addGap(37, 37, 37)
-                        .addComponent(reject_button)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1)
-                    .addComponent(refresh_label, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(approve_button)
-                    .addComponent(reject_button))
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
+        bg1.setText("jLabel2");
+        getContentPane().add(bg1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 730, 430));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -512,6 +480,8 @@ private void refresh_labelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIR
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton approve_button;
+    private javax.swing.JLabel bg;
+    private javax.swing.JLabel bg1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

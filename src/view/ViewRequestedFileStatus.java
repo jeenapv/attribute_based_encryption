@@ -7,6 +7,7 @@ package view;
 
 import Db.Dbcon;
 import General.Configuration;
+import General.Nimbus;
 import java.awt.Desktop;
 import java.io.File;
 import java.sql.Date;
@@ -31,10 +32,12 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
      * Creates new form ViewRequestedFileStatus
      */
     public ViewRequestedFileStatus() {
+         Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadFileRequestDetails();
         download_button.setEnabled(false);
+         Configuration.setIconOnLabel("chooseFile.jpg", bg);
     }
 
     private void loadFileRequestDetails() {
@@ -80,6 +83,7 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         download_button = new javax.swing.JButton();
         progress_bar = new javax.swing.JProgressBar();
+        bg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -87,6 +91,7 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         requested_files_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -117,14 +122,19 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(requested_files_table);
-        requested_files_table.getColumnModel().getColumn(0).setMinWidth(50);
-        requested_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        requested_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
-        requested_files_table.getColumnModel().getColumn(6).setMinWidth(0);
-        requested_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
-        requested_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
+        if (requested_files_table.getColumnModel().getColumnCount() > 0) {
+            requested_files_table.getColumnModel().getColumn(0).setMinWidth(50);
+            requested_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            requested_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
+            requested_files_table.getColumnModel().getColumn(6).setMinWidth(0);
+            requested_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
+            requested_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 54, 700, 271));
 
         jLabel1.setText("Requested File Status");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 22, 177, -1));
 
         jButton1.setText("BACK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -132,6 +142,7 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(386, 336, -1, -1));
 
         download_button.setText("Download file");
         download_button.addActionListener(new java.awt.event.ActionListener() {
@@ -139,43 +150,11 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 download_buttonActionPerformed(evt);
             }
         });
+        getContentPane().add(download_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(271, 336, -1, -1));
+        getContentPane().add(progress_bar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 336, 251, 23));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(199, 199, 199))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(download_button)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(275, 275, 275))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 271, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progress_bar, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(download_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(43, Short.MAX_VALUE))
-        );
+        bg.setText("jLabel2");
+        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 730, 410));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -329,6 +308,7 @@ private void requested_files_tableMouseClicked(java.awt.event.MouseEvent evt) {/
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bg;
     private javax.swing.JButton download_button;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

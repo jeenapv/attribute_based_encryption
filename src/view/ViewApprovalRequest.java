@@ -6,6 +6,7 @@
 package view;
 
 import Db.Dbcon;
+import General.Nimbus;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
      * Creates new form ViewApprovalRequest
      */
     public ViewApprovalRequest() {
+         Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadApprovalRequests();

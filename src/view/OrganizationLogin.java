@@ -7,6 +7,7 @@ package view;
 
 import Db.Dbcon;
 import General.Configuration;
+import General.Nimbus;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
@@ -23,6 +24,7 @@ public class OrganizationLogin extends javax.swing.JFrame {
      * Creates new form OrganizationLogin
      */
     public OrganizationLogin() {
+         Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         Configuration.setIconOnLabel("blueLogin.jpg", bg);

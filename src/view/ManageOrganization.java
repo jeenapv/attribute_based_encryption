@@ -7,6 +7,7 @@ package view;
 
 import Db.Dbcon;
 import General.Configuration;
+import General.Nimbus;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,6 +38,7 @@ public class ManageOrganization extends javax.swing.JFrame {
      * Creates new form ManageOrganization
      */
     public ManageOrganization() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadValuesInTable();

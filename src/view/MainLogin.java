@@ -7,6 +7,7 @@
 package view;
 
 import General.Configuration;
+import General.Nimbus;
 import java.awt.Color;
 
 /**
@@ -19,6 +20,7 @@ public class MainLogin extends javax.swing.JFrame {
      * Creates new form MainLogin
      */
     public MainLogin() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
          this.setLocationRelativeTo(null);
          loadIcons();
@@ -56,6 +58,7 @@ public class MainLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 21, 320, 30));
 
         jLabel2.setText("jLabel2");
+        jLabel2.setToolTipText("ADMIN");
         jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -65,6 +68,7 @@ public class MainLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(35, 82, 96, 100));
 
         jLabel3.setText("jLabel2");
+        jLabel3.setToolTipText("DATA MEMBER");
         jLabel3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -74,6 +78,7 @@ public class MainLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(149, 82, 96, 81));
 
         jLabel4.setText("jLabel2");
+        jLabel4.setToolTipText("ORGANIZATION");
         jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

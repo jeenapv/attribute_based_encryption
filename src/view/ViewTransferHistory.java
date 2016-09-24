@@ -6,6 +6,7 @@
 package view;
 
 import Db.Dbcon;
+import General.Nimbus;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ public class ViewTransferHistory extends javax.swing.JFrame {
      * Creates new form ViewTransferHistory
      */
     public ViewTransferHistory() {
+         Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         viewTransferHistory();

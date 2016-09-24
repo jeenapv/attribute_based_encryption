@@ -6,6 +6,7 @@
 package view;
 
 import Db.Dbcon;
+import General.Nimbus;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
@@ -19,6 +20,7 @@ public class AdminLogin extends javax.swing.JFrame {
      * Creates new form AdminLogin
      */
     public AdminLogin() {
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
     }

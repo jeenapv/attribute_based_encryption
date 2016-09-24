@@ -6,6 +6,8 @@
 package view;
 
 import Db.Dbcon;
+import General.Configuration;
+import General.Nimbus;
 
 import java.sql.ResultSet;
 import java.util.Date;
@@ -24,10 +26,12 @@ public class ViewAllFiles extends javax.swing.JFrame {
      * Creates new form ViewAllFiles
      */
     public ViewAllFiles() {
+         Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadAllFileSend();
         clearAll();
+        Configuration.setIconOnLabel("chooseFile.jpg", bg);
     }
 
     private void loadAllFileSend() {
@@ -98,6 +102,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
         request_priority = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         request_status_label = new javax.swing.JLabel();
+        bg = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -105,6 +110,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         all_files_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -135,29 +141,40 @@ public class ViewAllFiles extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(all_files_table);
-        all_files_table.getColumnModel().getColumn(0).setMinWidth(50);
-        all_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        all_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
-        all_files_table.getColumnModel().getColumn(5).setMinWidth(0);
-        all_files_table.getColumnModel().getColumn(5).setPreferredWidth(0);
-        all_files_table.getColumnModel().getColumn(5).setMaxWidth(0);
-        all_files_table.getColumnModel().getColumn(6).setMinWidth(0);
-        all_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
-        all_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
+        if (all_files_table.getColumnModel().getColumnCount() > 0) {
+            all_files_table.getColumnModel().getColumn(0).setMinWidth(50);
+            all_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+            all_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
+            all_files_table.getColumnModel().getColumn(5).setMinWidth(0);
+            all_files_table.getColumnModel().getColumn(5).setPreferredWidth(0);
+            all_files_table.getColumnModel().getColumn(5).setMaxWidth(0);
+            all_files_table.getColumnModel().getColumn(6).setMinWidth(0);
+            all_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
+            all_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
+        }
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 64, 528, 226));
 
         jLabel1.setText("ALL FILES");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(256, 32, -1, -1));
 
         jLabel2.setText("File Name");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 311, 111, -1));
 
         file_name_text.setEditable(false);
+        getContentPane().add(file_name_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 308, 170, -1));
 
         jLabel3.setText("File Size");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 342, 111, -1));
 
         file_size_text.setEditable(false);
+        getContentPane().add(file_size_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 339, 170, -1));
 
         jLabel4.setText("File Type");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 380, 111, -1));
 
         file_type_text.setEditable(false);
+        getContentPane().add(file_type_text, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 377, 170, -1));
 
         request_button.setText("REQUEST");
         request_button.addActionListener(new java.awt.event.ActionListener() {
@@ -165,6 +182,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 request_buttonActionPerformed(evt);
             }
         });
+        getContentPane().add(request_button, new org.netbeans.lib.awtextra.AbsoluteConstraints(104, 491, -1, -1));
 
         jButton2.setText("CLEAR");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -172,6 +190,7 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 491, -1, -1));
 
         jButton3.setText("HOME");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -179,94 +198,22 @@ public class ViewAllFiles extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(294, 491, -1, -1));
 
         jLabel5.setText("Request priority");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 456, 111, -1));
 
         request_priority.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "low", "medium", "high" }));
+        getContentPane().add(request_priority, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 453, 170, -1));
 
         jLabel6.setText("Request status");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(83, 408, 95, -1));
 
         request_status_label.setText(" ");
+        getContentPane().add(request_status_label, new org.netbeans.lib.awtextra.AbsoluteConstraints(212, 408, 170, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(256, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(245, 245, 245))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(104, 104, 104)
-                .addComponent(request_button)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addGap(28, 28, 28)
-                .addComponent(jButton3)
-                .addContainerGap(193, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(83, 83, 83)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(request_priority, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(file_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(request_status_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(file_type_text, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))))
-                .addContainerGap(166, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(file_name_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(file_size_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(file_type_text, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(request_status_label))
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(request_priority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(request_button)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(37, 37, 37))
-        );
+        bg.setText("jLabel7");
+        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 560, 560));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -475,6 +422,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable all_files_table;
+    private javax.swing.JLabel bg;
     private javax.swing.JTextField file_name_text;
     private javax.swing.JTextField file_size_text;
     private javax.swing.JTextField file_type_text;
