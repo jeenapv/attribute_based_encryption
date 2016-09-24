@@ -257,6 +257,9 @@ public class AddDataMember extends javax.swing.JFrame {
         int ins=dbcon.insert("insert into tbl_data_member(name,email_id,date_of_birth,address,phone_number,password,created_at,updated_at,data_member_status,organization_id)values('"+name+"','"+email+"','"+selectedDate+"','"+address+"','"+phoneNumber+"','"+password+"','"+System.currentTimeMillis()+"','"+System.currentTimeMillis()+"',1,'"+OrganizationLogin.logged_in_org_id+"')");
         if(ins>0){
             JOptionPane.showMessageDialog(rootPane, "Added successfully");
+            this.dispose();
+            OrganizationHome home=new OrganizationHome();
+            home.setVisible(true);
         }
         }
         

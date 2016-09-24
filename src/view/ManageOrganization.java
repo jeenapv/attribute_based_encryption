@@ -132,9 +132,11 @@ public class ManageOrganization extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getColumn(0).setResizable(false);
-        jTable1.getColumnModel().getColumn(1).setResizable(false);
-        jTable1.getColumnModel().getColumn(2).setResizable(false);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         jLabel1.setText("Name");
 
@@ -287,9 +289,9 @@ public class ManageOrganization extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jButton6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(organisation_logo_label, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                                .addComponent(organisation_logo_label, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -348,6 +350,7 @@ public class ManageOrganization extends javax.swing.JFrame {
                 path = rs.getString(7);
                 System.out.println(path);
                 organisationIconName = rs.getString("logo_image");
+                organisation_logo_label.setIcon(null);
                 Configuration.setOrganisationIcon(organisationIconName, organisation_logo_label);
                 active_deactive_button.setEnabled(true);
 

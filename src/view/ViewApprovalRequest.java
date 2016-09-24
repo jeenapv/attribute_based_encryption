@@ -86,7 +86,6 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
                 String requested_date = getFormatedDate(rs.getString("requested_date"), "dd MM YYYY");
 
 //                String attr_1 = rs.getString("attr_1");
-
                 String request_priority = rs.getString("request_priority").trim();
                 if (request_priority.equals("0")) {
                     request_priority = "Low";
@@ -127,10 +126,8 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
                 arr[10] = attr3;
                 arr[11] = request_priority;
 
-
                 model.addRow(arr);
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -359,6 +356,10 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
                 approve_button.setEnabled(false);
                 reject_button.setEnabled(false);
                 JOptionPane.showMessageDialog(rootPane, "Sucessfully rejected");
+                file_name_text.setText(null);
+                file_size_text.setText(null);
+                file_type_text.setText(null);
+                priority_text.setText(null);
                 loadApprovalRequests();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Could not approve now, please try again later");
@@ -379,6 +380,10 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
                 approve_button.setEnabled(false);
                 reject_button.setEnabled(false);
                 JOptionPane.showMessageDialog(rootPane, "Sucessfully approved");
+                file_name_text.setText(null);
+                file_size_text.setText(null);
+                file_type_text.setText(null);
+                priority_text.setText(null);
                 loadApprovalRequests();
             } else {
                 JOptionPane.showMessageDialog(rootPane, "Could not approve now, please try again later");
@@ -389,7 +394,6 @@ public class ViewApprovalRequest extends javax.swing.JFrame {
     }//GEN-LAST:event_approve_buttonActionPerformed
 
 private void request_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_request_tableMouseClicked
-
 
     String request_id = request_table.getValueAt(request_table.getSelectedRow(), 6).toString();
     approve_button.setEnabled(true);

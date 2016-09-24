@@ -290,6 +290,29 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
         organizationHome.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+     private void clearTable() throws Exception {
+        DefaultTableModel dm = (DefaultTableModel) jTable1.getModel();
+        int rowCount = dm.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            dm.removeRow(i);
+            file_name.setText(null);
+            file_size.setText(null);
+            file_type.setText(null);
+            priorityy.setText(null);
+        }
+    }
+      private void clearTable2() throws Exception {
+        DefaultTableModel dm = (DefaultTableModel) jTable2.getModel();
+        int rowCount = dm.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            dm.removeRow(i);
+            file_name.setText(null);
+            file_size.setText(null);
+            file_type.setText(null);
+            priorityy.setText(null);
+        }
+    }
+     
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         Dbcon dbcon = new Dbcon();
@@ -387,11 +410,14 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
     }
 
     private void intraOrganisationHistory() {
+        try {
+            clearTable();
+      
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         Dbcon dbcon = new Dbcon();
         String query = "SELECT filereq.request_id,filereq.encryption_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,datam.name AS dataMemName,  encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.is_inter_company_file_request=0 AND datam.organization_id='" + OrganizationLogin.logged_in_org_id + "' and datam2.organization_id='" + OrganizationLogin.logged_in_org_id + "'";
         ResultSet rs = dbcon.select(query);
-        try {
+       
             String arr[] = new String[7];
             while (rs.next()) {
                 String encId = rs.getString("encryption_id");
@@ -423,17 +449,21 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
 
-        }
+        } catch (Exception ex) {
+            Logger.getLogger(OrganizationTransferHistory.class.getName()).log(Level.SEVERE, null, ex);
+        } 
     }
 
     private void interOrganisationHistory() {
+       try {
+           clearTable2();
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         Dbcon dbcon = new Dbcon();
 
         String query = "SELECT filereq.request_id,filereq.encryption_id,filereq.requested_date, filereq.request_priority, filereq.requested_data_member ,filereq.status,datam.name AS dataMemName, org.name AS org_name, encrptlog.attr_1 ,encrptlog.attr_2,encrptlog.attr_3,datam2.name AS dataOwnerName, org2.name AS dataOwnweOrg FROM   tbl_file_request AS filereq ,tbl_data_member AS datam ,  tbl_organisation AS org,  tbl_data_member AS datam2 ,  tbl_organisation AS org2,  tbl_file_encryption_logs AS encrptlog WHERE   filereq.requested_data_member = datam.data_member_id  and org.organisation_id = datam.organization_id AND  encrptlog.encryption_id = filereq.encryption_id AND  datam2.data_member_id = filereq.file_owner_data_member AND org2.organisation_id = datam2.organization_id and filereq.is_inter_company_file_request=1 AND (datam.organization_id='" + OrganizationLogin.logged_in_org_id + "' or datam2.organization_id='" + OrganizationLogin.logged_in_org_id + "')";
         System.out.println(query);
         ResultSet rs = dbcon.select(query);
-        try {
+        
             String arr[] = new String[7];
             while (rs.next()) {
                 String encId = rs.getString("encryption_id");

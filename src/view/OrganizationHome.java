@@ -18,7 +18,7 @@ public class OrganizationHome extends javax.swing.JFrame {
     public OrganizationHome() {
         initComponents();
         this.setLocationRelativeTo(null);
-       String name=OrganizationLogin.username +" - HOME";
+       String name="Welcome "+OrganizationLogin.username;
        jLabel1.setText(name);
     }
 
@@ -90,9 +90,9 @@ public class OrganizationHome extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(53, 53, 53)
                 .addComponent(jButton1)
                 .addGap(30, 30, 30)
