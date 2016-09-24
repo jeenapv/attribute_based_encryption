@@ -41,11 +41,14 @@ public class Configuration {
             e.printStackTrace();
         }
     }
-    
+
     public static void setIconOnButton(String fileString, JButton button) {
         // convert string file path to image icona and set on this label
         BufferedImage img = null;
         try {
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
             img = ImageIO.read(new File(iconFolder + fileString));
             Image scaledInstance = img.getScaledInstance(button.getWidth(), button.getHeight(), Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(scaledInstance);
@@ -107,7 +110,6 @@ public class Configuration {
             if (!f_allKeys.exists()) {
                 f_allKeys.mkdir();
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
