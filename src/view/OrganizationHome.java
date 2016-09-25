@@ -69,7 +69,7 @@ public class OrganizationHome extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 140, 60));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, 110, 60));
 
         jButton3.setText("View Transfer History");
         jButton3.setToolTipText("VIEW TRANSACTION HISTORY");
@@ -79,9 +79,9 @@ public class OrganizationHome extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 150, 80));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 120, 80));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 240, 40));
 

@@ -100,11 +100,9 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(6).setMinWidth(0);
-            jTable1.getColumnModel().getColumn(6).setPreferredWidth(0);
-            jTable1.getColumnModel().getColumn(6).setMaxWidth(0);
-        }
+        jTable1.getColumnModel().getColumn(6).setMinWidth(0);
+        jTable1.getColumnModel().getColumn(6).setPreferredWidth(0);
+        jTable1.getColumnModel().getColumn(6).setMaxWidth(0);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -119,8 +117,8 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane4.addTab("IntraOrganization", jPanel1);
@@ -154,17 +152,15 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(1).setResizable(false);
-            jTable2.getColumnModel().getColumn(2).setResizable(false);
-            jTable2.getColumnModel().getColumn(3).setResizable(false);
-            jTable2.getColumnModel().getColumn(4).setResizable(false);
-            jTable2.getColumnModel().getColumn(5).setResizable(false);
-            jTable2.getColumnModel().getColumn(6).setMinWidth(0);
-            jTable2.getColumnModel().getColumn(6).setPreferredWidth(0);
-            jTable2.getColumnModel().getColumn(6).setMaxWidth(0);
-        }
+        jTable2.getColumnModel().getColumn(0).setResizable(false);
+        jTable2.getColumnModel().getColumn(1).setResizable(false);
+        jTable2.getColumnModel().getColumn(2).setResizable(false);
+        jTable2.getColumnModel().getColumn(3).setResizable(false);
+        jTable2.getColumnModel().getColumn(4).setResizable(false);
+        jTable2.getColumnModel().getColumn(5).setResizable(false);
+        jTable2.getColumnModel().getColumn(6).setMinWidth(0);
+        jTable2.getColumnModel().getColumn(6).setPreferredWidth(0);
+        jTable2.getColumnModel().getColumn(6).setMaxWidth(0);
 
         jLabel1.setText("Sender Organization");
 
@@ -205,12 +201,12 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(rec_org, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jTabbedPane4.addTab("InterOrganization", jPanel2);
 
-        getContentPane().add(jTabbedPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 26, -1, 223));
+        getContentPane().add(jTabbedPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 26, -1, 260));
 
         jLabel3.setText("File Name");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(76, 263, 111, -1));
@@ -237,7 +233,7 @@ public class OrganizationTransferHistory extends javax.swing.JFrame {
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(225, 420, 162, -1));
 
         bg.setText("jLabel7");
-        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 550, 510));
+        getContentPane().add(bg, new org.netbeans.lib.awtextra.AbsoluteConstraints(-6, -6, 550, 470));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
