@@ -138,7 +138,7 @@ public class ChooseFile extends javax.swing.JFrame {
             System.out.println("masterKey " + masterKey);
             int secretKey = generateSecretKey(masterKey, privateKey);
 
-            String fileDataString = encodeData(fileData);
+            String fileDataString = encodeData(fileData, masterKey, secretKey, privateKey);
             System.out.println(fileDataString);
 
             Writer out = new BufferedWriter(new FileWriter(file));
@@ -218,12 +218,11 @@ public class ChooseFile extends javax.swing.JFrame {
         return attributeCoefficient;
     }
 
-    public static String encodeData(byte[] imagebytearray) {
-        return Base64.encode(imagebytearray);
-    }
-
-    public static byte[] decodeData(String idatastring) {
-        return Base64.decode(idatastring);
+    public static String encodeData(byte[] imagebytearray, int masterKey, int secretKey, int privateKey) {
+        ENC.setMasterKey(masterKey);
+        ENC.setSecretKey(secretKey);
+        ENC.setPrivateKey(privateKey);
+        return ENC.encode(imagebytearray);
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -244,6 +243,29 @@ public class ChooseFile extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    static class ENC {
+
+        static int privateKey;
+        static int secretKey;
+        static int masterKey;
+
+        public static void setMasterKey(int masterKey) {
+            ENC.masterKey = masterKey;
+        }
+
+        public static void setSecretKey(int secretKey) {
+            ENC.secretKey = secretKey;
+        }
+
+        public static void setPrivateKey(int privateKey) {
+            ENC.privateKey = privateKey;
+        }
+
+        public static String encode(byte[] imagebytearray) {
+            return Base64.encode(imagebytearray);
+        }
+    }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:

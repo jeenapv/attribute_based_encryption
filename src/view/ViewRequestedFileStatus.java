@@ -32,18 +32,18 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
      * Creates new form ViewRequestedFileStatus
      */
     public ViewRequestedFileStatus() {
-         Nimbus.loadLoogAndFeel();
+        Nimbus.loadLoogAndFeel();
         initComponents();
         this.setLocationRelativeTo(null);
         loadFileRequestDetails();
         download_button.setEnabled(false);
-         Configuration.setIconOnLabel("chooseFile.jpg", bg);
+        Configuration.setIconOnLabel("chooseFile.jpg", bg);
     }
 
     private void loadFileRequestDetails() {
         Dbcon dbcon = new Dbcon();
         DefaultTableModel dt = (DefaultTableModel) requested_files_table.getModel();
-        ResultSet rs = dbcon.select("SELECT hp.name , s.request_id,s.requested_date,s.status, th.attr_1,h.name, th.encrypted_file_path FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.file_owner_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member='" + DataMemberLogin.logged_in_user_id + "' and  th.encryption_id=s.encryption_id");
+        ResultSet rs = dbcon.select("SELECT hp.name , s.request_id,s.requested_date,s.status, th.attr_1,h.name, th.encrypted_file_path , s.encryption_id as eid FROM tbl_file_request s INNER JOIN tbl_data_member hp   on hp.data_member_id = s.file_owner_data_member INNER JOIN tbl_organisation h on hp.organization_id = h.organisation_id INNER JOIN  tbl_file_encryption_logs th on hp.organization_id = h.organisation_id where requested_data_member='" + DataMemberLogin.logged_in_user_id + "' and  th.encryption_id=s.encryption_id");
         try {
             while (rs.next()) {
                 String date1 = rs.getString(3);
@@ -60,7 +60,7 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
                 } else {
                     status = "rejected";
                 }
-                dt.addRow(new String[]{rs.getString(2), rs.getString(5), rs.getString(1), rs.getString(6), date, status, rs.getString("encrypted_file_path")});
+                dt.addRow(new String[]{rs.getString(2), rs.getString(5), rs.getString(1), rs.getString(6), date, status, rs.getString("encrypted_file_path"), rs.getString("eid")});
             }
             requested_files_table.setModel(dt);
         } catch (SQLException ex) {
@@ -98,14 +98,14 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "FILE", "DATA MEMBER", "ORGANIZATION", "REQUESTED DATE", "STATUS", "FILE PATH"
+                "ID", "FILE", "DATA MEMBER", "ORGANIZATION", "REQUESTED DATE", "STATUS", "FILE PATH", "eid"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -122,14 +122,15 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(requested_files_table);
-        if (requested_files_table.getColumnModel().getColumnCount() > 0) {
-            requested_files_table.getColumnModel().getColumn(0).setMinWidth(50);
-            requested_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
-            requested_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
-            requested_files_table.getColumnModel().getColumn(6).setMinWidth(0);
-            requested_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
-            requested_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
-        }
+        requested_files_table.getColumnModel().getColumn(0).setMinWidth(50);
+        requested_files_table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        requested_files_table.getColumnModel().getColumn(0).setMaxWidth(50);
+        requested_files_table.getColumnModel().getColumn(6).setMinWidth(0);
+        requested_files_table.getColumnModel().getColumn(6).setPreferredWidth(0);
+        requested_files_table.getColumnModel().getColumn(6).setMaxWidth(0);
+        requested_files_table.getColumnModel().getColumn(7).setMinWidth(0);
+        requested_files_table.getColumnModel().getColumn(7).setPreferredWidth(0);
+        requested_files_table.getColumnModel().getColumn(7).setMaxWidth(0);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 54, 700, 271));
 
@@ -222,25 +223,68 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
     private void downloadSelectedFileWithDecryption() {
         String requestedFilePath = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 6).toString();
         String requestedFileName = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 1).toString();
+        String eid = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 7).toString();
+
         System.out.println(requestedFilePath);
         File fromFile = new File(Configuration.dataCloud + requestedFilePath);
         try {
             String readFileToString = FileUtils.readFileToString(fromFile);
-            byte[] dataByteArray = decodeData(readFileToString);
-            
-            File temporaryFileDirectory = new File(Configuration.temporaryFilePath + System.currentTimeMillis());
-            if (temporaryFileDirectory.mkdir()) {
-                FileOutputStream dataOutFile = new FileOutputStream(temporaryFileDirectory.getPath() + "/" + requestedFileName + "." + FilenameUtils.getExtension(requestedFilePath));
-                dataOutFile.write(dataByteArray);
-                dataOutFile.close();
-                try {
-                    Desktop desktop = Desktop.getDesktop();
-                    desktop.open(temporaryFileDirectory);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(rootPane, "Could not open the file. Please check directory " + temporaryFileDirectory);
+
+            // kakes
+            String qery = "select private_key,master_key,secret_key from tbl_file_encryption_logs where encryption_id=" + eid;
+            ResultSet select = new Dbcon().select(qery);
+            if (select.next()) {
+                String private_key = select.getString("private_key");
+                String master_key = select.getString("master_key");
+                String secret_key = select.getString("secret_key");
+
+                System.out.println("private_key " + private_key);
+                System.out.println("master_key " + master_key);
+                System.out.println("secret_key " + secret_key);
+
+                File privateKey = new File(Configuration.allKeys + private_key);
+                File masterKey = new File(Configuration.allKeys + master_key);
+                File secretKey = new File(Configuration.allKeys + secret_key);
+
+                if (privateKey.exists() && secretKey.exists() && privateKey.exists()) {
+                    String p_key = "0";
+                    String m_key = "0";
+                    String s_key = "0";
+                    try {
+                        p_key = FileUtils.readFileToString(privateKey);
+                        m_key = FileUtils.readFileToString(masterKey);
+                        s_key = FileUtils.readFileToString(secretKey);
+                    } catch (Exception e) {
+                    }
+
+                    try {
+                        ENC.setPrivateKey(Integer.parseInt(p_key));
+                        ENC.setMasterKey(Integer.parseInt(m_key));
+                        ENC.setSecretKey(Integer.parseInt(s_key));
+                    } catch (Exception e) {
+                    }
+                    byte[] dataByteArray = ENC.decodeData(readFileToString);
+
+                    File temporaryFileDirectory = new File(Configuration.temporaryFilePath + System.currentTimeMillis());
+                    if (temporaryFileDirectory.mkdir()) {
+                        FileOutputStream dataOutFile = new FileOutputStream(temporaryFileDirectory.getPath() + "/" + requestedFileName + "." + FilenameUtils.getExtension(requestedFilePath));
+                        dataOutFile.write(dataByteArray);
+                        dataOutFile.close();
+                        try {
+                            Desktop desktop = Desktop.getDesktop();
+                            desktop.open(temporaryFileDirectory);
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(rootPane, "Could not open the file. Please check directory " + temporaryFileDirectory);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Could not get file permission in computer to make new folder at " + temporaryFileDirectory);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "All the keys are not found. Could not decrypt the file");
                 }
             } else {
-                JOptionPane.showMessageDialog(rootPane, "Could not get file permission in computer to make new folder at " + temporaryFileDirectory);
+                JOptionPane.showMessageDialog(rootPane, "Sone could not decrypt the file, please try after some time");
+                return;
             }
             download_button.setEnabled(false);
         } catch (Exception ee) {
@@ -248,10 +292,32 @@ public class ViewRequestedFileStatus extends javax.swing.JFrame {
         }
     }
 
-    public static byte[] decodeData(String idatastring) {
-        return Base64.decode(idatastring);
+    private void getKeys() {
     }
-    
+
+    static class ENC {
+
+        static int privateKey;
+        static int secretKey;
+        static int masterKey;
+
+        public static void setMasterKey(int masterKey) {
+            ENC.masterKey = masterKey;
+        }
+
+        public static void setSecretKey(int secretKey) {
+            ENC.secretKey = secretKey;
+        }
+
+        public static void setPrivateKey(int privateKey) {
+            ENC.privateKey = privateKey;
+        }
+
+        public static byte[] decodeData(String idatastring) {
+            return Base64.decode(idatastring);
+        }
+    }
+
 private void download_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_download_buttonActionPerformed
     // TODO add your handling code here:
     String requested_file_status = requested_files_table.getValueAt(requested_files_table.getSelectedRow(), 5).toString();
